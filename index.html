@@ -531,34 +531,36 @@
   <!-- ===================================================================== -->
   <!-- VIEW 3: RULES MODAL                                                   -->
   <!-- ===================================================================== -->
-  <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-4">
-    <div class="w-full max-w-sm bg-[#161615] border-2 border-[#F7F6F2] rounded-2xl p-5 flex flex-col text-[#F7F6F2] shadow-2xl">
-      <div class="flex items-center justify-between border-b border-[#F7F6F2]/30 pb-2 mb-3">
-        <h3 class="font-title text-base font-black tracking-wider uppercase">ПРАВИЛА И РЕЖИМЫ</h3>
+  <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-3">
+    <div class="w-full max-w-md bg-[#161615] border-2 border-[#F7F6F2] rounded-2xl p-4 flex flex-col text-[#F7F6F2] shadow-2xl max-h-[88dvh]">
+      <div class="flex items-center justify-between border-b border-[#F7F6F2]/30 pb-2 mb-2.5 shrink-0">
+        <h3 class="font-title text-sm sm:text-base font-black tracking-wider uppercase">ПРАВИЛА И ЭНЦИКЛОПЕДИЯ (120 КАРТ)</h3>
         <button onclick="toggleRulesModal(false)" class="text-lg font-bold text-[#cfcec9] px-2 py-0.5">✕</button>
       </div>
 
-      <div class="space-y-2.5 text-xs text-[#cfcec9] leading-relaxed">
+      <div class="flex-1 overflow-y-auto space-y-2.5 text-xs text-[#cfcec9] leading-relaxed pr-1">
         <div class="p-2 rounded-lg bg-[#222220] border border-[#F7F6F2]/20">
           <div class="font-black text-[#F7F6F2] text-[11px] uppercase mb-0.5">🃏 Режим 1: «Тактика»</div>
-          <div>Все карты у тебя на виду в руке. Ты <b>сам выбираешь</b>, какого динозавра выставить в атаку или оборону, перебивая карты соперника умом!</div>
+          <div>Все динозавры открыты в твоей руке. Ты <b>сам выбираешь</b> кого выставить в раунд, оценивая силу атаки и защиты против карт врага.</div>
         </div>
 
         <div class="p-2 rounded-lg bg-[#222220] border border-[#F7F6F2]/20">
           <div class="font-black text-[#F7F6F2] text-[11px] uppercase mb-0.5">🎴 Режим 2: «Классика»</div>
-          <div>Динозавры лежат в закрытой стопке на столе. Каждый раунд тянешь верхнюю карту вслепую (как сотки/фишки). Свойства лежат в руке!</div>
+          <div>Динозавры лежат закрытой стопкой на столе — вскрываются вслепую (как фишки/сотки). Свойства остаются в руке!</div>
         </div>
 
-        <div class="space-y-1 text-[11px]">
-          <div>• <b>Атака vs Броня:</b> у атакующего смотрится <b>АТАКА</b>, у защитника — <b>БРОНЯ</b>. Если Атака > Брони — атакующий забирает обе карты в биту! Иначе карты забирает защитник!</div>
-          <div>• <b>Карты свойств (✦):</b> накладываются поверх динозавра (+100 силы, +80 брони, яд, янтарь). Свойство одноразовое!</div>
-          <div>• <b>Обмен и трофеи:</b> побеждает тот, кто соберет больше чужих динозавров в свою биту!</div>
+        <div class="p-2 rounded-lg bg-[#1f1f1d] border border-[#F7F6F2]/20 space-y-1 text-[10.5px]">
+          <div class="font-black text-[#F7F6F2] text-[11px] uppercase">⚔️ Боевые правила:</div>
+          <div>• <b>Атака vs Броня:</b> У нападающего учитывается <b>АТАКА</b>, у защитника — <b>БРОНЯ</b>. При Атака > Броня побеждает нападающий, иначе отбивается защитник!</div>
+          <div>• <b>Бита:</b> Победитель раунда забирает обе карты себе. Побеждает тот, кто соберет больше трофеев!</div>
+          <div>• <b>120 уникальных существ:</b> Хищники, травоядные, водные ящеры, птерозавры, метеориты, древняя ДНК и редкие окаменелости от 1/10 до 10/10!</div>
+          <div>• <b>30 карт свойств:</b> Энергия (+10..+75), Сила (+10..+100), Защита (+10..+75), Отступить, Тагомайзер (контратака), Янтарь (спасение карты), Стая, Яд, Иммунитет, Естественный отбор, Рефугиум, Деэкстинкция и др.</div>
         </div>
       </div>
 
       <button onclick="toggleRulesModal(false)"
-        class="mt-4 w-full py-2.5 rounded-xl bg-[#F7F6F2] text-[#141414] font-black text-xs uppercase tracking-wider shadow active:scale-95 transition">
-        ПОНЯТНО
+        class="mt-3 w-full py-2.5 rounded-xl bg-[#F7F6F2] text-[#141414] font-black text-xs uppercase tracking-wider shadow active:scale-95 transition shrink-0">
+        ЗАКРЫТЬ
       </button>
     </div>
   </div>
@@ -660,58 +662,193 @@
 };
 
     // 20 AUTHENTIC DINOSAURS
-    const ALL_DINOSAURS = [
-      { id: 'd1',  name: 'Тираннозавр',     latin: 'Tyrannosaurus rex', rarity: 10, cls: 'Хищник',     atk: 140, arm: 80,  era: 'Меловой' },
-      { id: 'd2',  name: 'Трицератопс',     latin: 'Triceratops',       rarity: 7,  cls: 'Травоядный', atk: 70,  arm: 120, era: 'Меловой' },
-      { id: 'd3',  name: 'Брахиозавр',      latin: 'Brachiosaurus',     rarity: 3,  cls: 'Травоядный', atk: 50,  arm: 90,  era: 'Юрский'  },
-      { id: 'd4',  name: 'Стегозавр',       latin: 'Stegosaurus',       rarity: 5,  cls: 'Травоядный', atk: 60,  arm: 110, era: 'Юрский'  },
-      { id: 'd5',  name: 'Анкилозавр',      latin: 'Ankylosaurus',      rarity: 8,  cls: 'Травоядный', atk: 50,  arm: 140, era: 'Меловой' },
-      { id: 'd6',  name: 'Велоцираптор',    latin: 'Velociraptor',      rarity: 4,  cls: 'Хищник',     atk: 90,  arm: 40,  era: 'Меловой' },
-      { id: 'd7',  name: 'Спинозавр',       latin: 'Spinosaurus',       rarity: 9,  cls: 'Универсал',  atk: 130, arm: 90,  era: 'Меловой' },
-      { id: 'd8',  name: 'Паразауролоф',    latin: 'Parasaurolophus',   rarity: 2,  cls: 'Травоядный', atk: 50,  arm: 70,  era: 'Меловой' },
-      { id: 'd9',  name: 'Диплодок',        latin: 'Diplodocus',        rarity: 4,  cls: 'Травоядный', atk: 60,  arm: 90,  era: 'Юрский'  },
-      { id: 'd10', name: 'Карнотавр',       latin: 'Carnotaurus',       rarity: 6,  cls: 'Хищник',     atk: 110, arm: 60,  era: 'Меловой' },
-      { id: 'd11', name: 'Игуанодон',       latin: 'Iguanodon',         rarity: 4,  cls: 'Универсал',  atk: 70,  arm: 80,  era: 'Меловой' },
-      { id: 'd12', name: 'Пахицефалозавр',  latin: 'Pachycephalosaurus',rarity: 3,  cls: 'Универсал',  atk: 80,  arm: 60,  era: 'Меловой' },
-      { id: 'd13', name: 'Аллозавр',        latin: 'Allosaurus',        rarity: 8,  cls: 'Хищник',     atk: 120, arm: 70,  era: 'Юрский'  },
-      { id: 'd14', name: 'Бронтозавр',      latin: 'Brontosaurus',      rarity: 5,  cls: 'Травоядный', atk: 60,  arm: 100, era: 'Юрский'  },
-      { id: 'd15', name: 'Птеранодон',      latin: 'Pteranodon',        rarity: 3,  cls: 'Хищник',     atk: 80,  arm: 50,  era: 'Меловой' },
-      { id: 'd16', name: 'Галлимим',        latin: 'Gallimimus',        rarity: 2,  cls: 'Универсал',  atk: 70,  arm: 40,  era: 'Меловой' },
-      { id: 'd17', name: 'Стиракозавр',     latin: 'Styracosaurus',     rarity: 6,  cls: 'Травоядный', atk: 70,  arm: 110, era: 'Меловой' },
-      { id: 'd18', name: 'Теризинозавр',    latin: 'Therizinosaurus',   rarity: 8,  cls: 'Универсал',  atk: 130, arm: 70,  era: 'Меловой' },
-      { id: 'd19', name: 'Дилофозавр',      latin: 'Dilophosaurus',     rarity: 4,  cls: 'Хищник',     atk: 90,  arm: 50,  era: 'Юрский'  },
-      { id: 'd20', name: 'Майязавр',        latin: 'Maiasaura',         rarity: 2,  cls: 'Травоядный', atk: 50,  arm: 70,  era: 'Меловой' }
+        const ALL_DINOSAURS = [
+      { id: 'c1', name: "Анхиорнис", latin: "Anchiornis huxleyi", rarity: 2, cls: 'Хищник', atk: 15, arm: 10, era: 'Юрский', imageId: 'd6' },
+      { id: 'c2', name: "Компсогнат", latin: "Compsognathus longipes", rarity: 6, cls: 'Хищник', atk: 12, arm: 12, era: 'Юрский', imageId: 'd16' },
+      { id: 'c3', name: "Ляонингозавр", latin: "Liaoningosaurus paradoxus", rarity: 8, cls: 'Травоядный', atk: 33, arm: 48, era: 'Меловой', imageId: 'd5' },
+      { id: 'c4', name: "Пситтакозавр", latin: "Psittacosaurus mongoliensis", rarity: 1, cls: 'Травоядный', atk: 13, arm: 18, era: 'Меловой', imageId: 'd2' },
+      { id: 'c5', name: "Сибирский пситтакозавр", latin: "Psittacosaurus sibiricus", rarity: 4, cls: 'Травоядный', atk: 12, arm: 20, era: 'Меловой', imageId: 'd2' },
+      { id: 'c6', name: "Велоцираптор", latin: "Velociraptor mongoliensis", rarity: 5, cls: 'Хищник', atk: 50, arm: 32, era: 'Меловой', imageId: 'd6' },
+      { id: 'c7', name: "Велоцираптор Осмольской", latin: "Velociraptor osmolskae", rarity: 9, cls: 'Хищник', atk: 48, arm: 27, era: 'Меловой', imageId: 'd6' },
+      { id: 'c8', name: "Дейноних", latin: "Deinonychus antirrhopus", rarity: 3, cls: 'Хищник', atk: 74, arm: 42, era: 'Меловой', imageId: 'd6' },
+      { id: 'c9', name: "Ютараптор", latin: "Utahraptor ostrommaysi", rarity: 4, cls: 'Хищник', atk: 86, arm: 52, era: 'Меловой', imageId: 'd6' },
+      { id: 'c10', name: "Саркозух", latin: "Sarcosuchus imperator", rarity: 3, cls: 'Хищник', atk: 115, arm: 84, era: 'Меловой', imageId: 'd7' },
+      { id: 'c11', name: "Дейнозух ругозус", latin: "Deinosuchus rugosus", rarity: 4, cls: 'Хищник', atk: 180, arm: 92, era: 'Меловой', imageId: 'd7' },
+      { id: 'c12', name: "Дейнозух риогранде", latin: "Deinosuchus riograndensis", rarity: 5, cls: 'Хищник', atk: 178, arm: 94, era: 'Меловой', imageId: 'd7' },
+      { id: 'c13', name: "Метриоринх", latin: "Metriorhynchus geoffroyi", rarity: 7, cls: 'Водный', atk: 79, arm: 42, era: 'Юрский', imageId: 'd7' },
+      { id: 'c14', name: "Орнитомим", latin: "Ornithomimus velox", rarity: 2, cls: 'Универсал', atk: 38, arm: 26, era: 'Меловой', imageId: 'd16' },
+      { id: 'c15', name: "Галлимим", latin: "Gallimimus bullatus", rarity: 1, cls: 'Универсал', atk: 58, arm: 45, era: 'Меловой', imageId: 'd16' },
+      { id: 'c16', name: "Анзеримим", latin: "Anserimimus planinychus", rarity: 4, cls: 'Универсал', atk: 46, arm: 52, era: 'Меловой', imageId: 'd16' },
+      { id: 'c17', name: "Струтиомим", latin: "Struthiomimus altus", rarity: 3, cls: 'Универсал', atk: 43, arm: 56, era: 'Меловой', imageId: 'd16' },
+      { id: 'c18', name: "Инцизивозавр", latin: "Incisivosaurus gauthieri", rarity: 8, cls: 'Травоядный', atk: 35, arm: 21, era: 'Меловой', imageId: 'd16' },
+      { id: 'c19', name: "Халшкараптор", latin: "Halszkaraptor escuilliei", rarity: 9, cls: 'Водный', atk: 9, arm: 13, era: 'Меловой', imageId: 'd6' },
+      { id: 'c20', name: "Паразауролоф Уокера", latin: "Parasaurolophus walkeri", rarity: 4, cls: 'Травоядный', atk: 56, arm: 72, era: 'Меловой', imageId: 'd8' },
+      { id: 'c21', name: "Паразауролоф тубицен", latin: "Parasaurolophus tubicen", rarity: 5, cls: 'Травоядный', atk: 59, arm: 73, era: 'Меловой', imageId: 'd8' },
+      { id: 'c22', name: "Эдмонтозавр", latin: "Edmontosaurus annectens", rarity: 2, cls: 'Травоядный', atk: 58, arm: 69, era: 'Меловой', imageId: 'd8' },
+      { id: 'c23', name: "Олоротитан", latin: "Olorotitan arharensis", rarity: 7, cls: 'Травоядный', atk: 49, arm: 71, era: 'Меловой', imageId: 'd8' },
+      { id: 'c24', name: "Игуанодон берниссар", latin: "Iguanodon bernissartensis", rarity: 1, cls: 'Травоядный', atk: 72, arm: 60, era: 'Меловой', imageId: 'd11' },
+      { id: 'c25', name: "Игуанодон гальвенсис", latin: "Iguanodon galvensis", rarity: 4, cls: 'Травоядный', atk: 73, arm: 58, era: 'Меловой', imageId: 'd11' },
+      { id: 'c26', name: "Игуанодон Мантелла", latin: "Iguanodon anglicus (Gideon Mantell artwork)", rarity: 10, cls: 'Реликт', atk: 225, arm: 0, era: 'Юрский', imageId: 'd11' },
+      { id: 'c27', name: "Зуб игуанодона", latin: "Iguanodon anglicus (tooth artwork)", rarity: 9, cls: 'Реликт', atk: 2, arm: 0, era: 'Меловой', imageId: 'd11' },
+      { id: 'c28', name: "Барилиум", latin: "Barilium dawsoni", rarity: 5, cls: 'Травоядный', atk: 56, arm: 71, era: 'Меловой', imageId: 'd11' },
+      { id: 'c29', name: "Гипселоспин", latin: "Hypselospinus fittoni", rarity: 6, cls: 'Травоядный', atk: 44, arm: 72, era: 'Меловой', imageId: 'd11' },
+      { id: 'c30', name: "Мантеллизавр", latin: "Mantellisaurus atherfieldensis", rarity: 3, cls: 'Травоядный', atk: 38, arm: 54, era: 'Меловой', imageId: 'd11' },
+      { id: 'c31', name: "Шарик Стегозавр", latin: "Надувной розовый шарик стегозавр", rarity: 10, cls: 'Реликт', atk: 0, arm: 0, era: 'Голоцен', imageId: 'd4' },
+      { id: 'c32', name: "Майязавр", latin: "Maiasaura peeblesorum", rarity: 1, cls: 'Травоядный', atk: 53, arm: 67, era: 'Меловой', imageId: 'd20' },
+      { id: 'c33', name: "Пахицефалозавр", latin: "Pachycephalosaurus wyomingensis", rarity: 3, cls: 'Универсал', atk: 82, arm: 44, era: 'Меловой', imageId: 'd12' },
+      { id: 'c34', name: "Завацефал", latin: "Zavacephale rinpoche", rarity: 7, cls: 'Универсал', atk: 65, arm: 33, era: 'Меловой', imageId: 'd12' },
+      { id: 'c35', name: "Дулизавр", latin: "Doolysaurus huhmini", rarity: 6, cls: 'Универсал', atk: 5, arm: 8, era: 'Меловой', imageId: 'd16' },
+      { id: 'c36', name: "Фоскея", latin: "Foskeia pelendonum", rarity: 4, cls: 'Травоядный', atk: 4, arm: 7, era: 'Меловой', imageId: 'd16' },
+      { id: 'c37', name: "Нигерзавр", latin: "Nigersaurus taqueti", rarity: 3, cls: 'Травоядный', atk: 39, arm: 59, era: 'Меловой', imageId: 'd3' },
+      { id: 'c38', name: "Линхеникус", latin: "Linhenykus monodactylus", rarity: 6, cls: 'Хищник', atk: 5, arm: 14, era: 'Меловой', imageId: 'd6' },
+      { id: 'c39', name: "Европазавр", latin: "Europasaurus holgeri", rarity: 7, cls: 'Травоядный', atk: 48, arm: 62, era: 'Юрский', imageId: 'd3' },
+      { id: 'c40', name: "Брахиозавр", latin: "Brachiosaurus altithorax", rarity: 6, cls: 'Травоядный', atk: 90, arm: 220, era: 'Юрский', imageId: 'd3' },
+      { id: 'c41', name: "Жираффатитан", latin: "Giraffatitan brancai", rarity: 8, cls: 'Травоядный', atk: 92, arm: 225, era: 'Юрский', imageId: 'd3' },
+      { id: 'c42', name: "Патаготитан", latin: "Patagotitan mayorum", rarity: 10, cls: 'Травоядный', atk: 110, arm: 300, era: 'Меловой', imageId: 'd14' },
+      { id: 'c43', name: "Диплодок", latin: "Diplodocus carnegii", rarity: 7, cls: 'Травоядный', atk: 67, arm: 185, era: 'Юрский', imageId: 'd9' },
+      { id: 'c44', name: "Амаргазавр", latin: "Amargasaurus cazaui", rarity: 6, cls: 'Травоядный', atk: 46, arm: 67, era: 'Меловой', imageId: 'd9' },
+      { id: 'c45', name: "Дикреозавр", latin: "Dicraeosaurus hansemanni", rarity: 5, cls: 'Травоядный', atk: 42, arm: 64, era: 'Юрский', imageId: 'd9' },
+      { id: 'c46', name: "Бахадазавр", latin: "Bajadasaurus pronuspinax", rarity: 6, cls: 'Травоядный', atk: 41, arm: 93, era: 'Меловой', imageId: 'd9' },
+      { id: 'c47', name: "Маменчизавр", latin: "Mamenchisaurus sinocanadorum", rarity: 8, cls: 'Травоядный', atk: 38, arm: 88, era: 'Юрский', imageId: 'd14' },
+      { id: 'c48', name: "Анкилозавр", latin: "Ankylosaurus magniventris", rarity: 5, cls: 'Травоядный', atk: 60, arm: 140, era: 'Меловой', imageId: 'd5' },
+      { id: 'c49', name: "Спикомеллус", latin: "Spicomellus afer", rarity: 9, cls: 'Травоядный', atk: 66, arm: 166, era: 'Юрский', imageId: 'd5' },
+      { id: 'c50', name: "Стегоурос", latin: "Stegouros elengassen", rarity: 3, cls: 'Травоядный', atk: 32, arm: 48, era: 'Меловой', imageId: 'd5' },
+      { id: 'c51', name: "Мумия Бореалопельты", latin: "Borealopelta markmitchelli (mummy)", rarity: 10, cls: 'Реликт', atk: 0, arm: 240, era: 'Меловой', imageId: 'd5' },
+      { id: 'c52', name: "Бореалопельта", latin: "Borealopelta markmitchelli", rarity: 4, cls: 'Травоядный', atk: 56, arm: 122, era: 'Меловой', imageId: 'd5' },
+      { id: 'c53', name: "Стегозавр стенопс", latin: "Stegosaurus stenops", rarity: 3, cls: 'Травоядный', atk: 60, arm: 110, era: 'Юрский', imageId: 'd4' },
+      { id: 'c54', name: "Адратиклит", latin: "Adratiklit boulahfa", rarity: 4, cls: 'Травоядный', atk: 58, arm: 112, era: 'Юрский', imageId: 'd4' },
+      { id: 'c55', name: "Тиреозавр", latin: "Thyreosaurus atlasicus", rarity: 5, cls: 'Травоядный', atk: 56, arm: 116, era: 'Юрский', imageId: 'd4' },
+      { id: 'c56', name: "Дацентрур", latin: "Dacentrurus armatus", rarity: 4, cls: 'Травоядный', atk: 56, arm: 114, era: 'Юрский', imageId: 'd4' },
+      { id: 'c57', name: "Скутеллозавр", latin: "Scutellosaurus", rarity: 3, cls: 'Травоядный', atk: 18, arm: 35, era: 'Юрский', imageId: 'd4' },
+      { id: 'c58', name: "Сцелидозавр", latin: "Scelidosaurus harrisonii", rarity: 2, cls: 'Травоядный', atk: 22, arm: 38, era: 'Юрский', imageId: 'd4' },
+      { id: 'c59', name: "Птеродактиль", latin: "Pterodactylus antiquus", rarity: 3, cls: 'Летающий', atk: 43, arm: 35, era: 'Юрский', imageId: 'd15' },
+      { id: 'c60', name: "Археоптерикс", latin: "Archaeopteryx lithographica", rarity: 4, cls: 'Летающий', atk: 28, arm: 46, era: 'Юрский', imageId: 'd15' },
+      { id: 'c61', name: "Окаменелость Археоптерикса", latin: "Archaeopteryx lithographica (fossils)", rarity: 10, cls: 'Реликт', atk: 250, arm: 0, era: 'Юрский', imageId: 'd15' },
+      { id: 'c62', name: "Рамфоринх", latin: "Rhamphorhynchus muensteri", rarity: 2, cls: 'Летающий', atk: 48, arm: 26, era: 'Юрский', imageId: 'd15' },
+      { id: 'c63', name: "Птеранодон", latin: "Pteranodon longiceps", rarity: 1, cls: 'Летающий', atk: 60, arm: 40, era: 'Меловой', imageId: 'd15' },
+      { id: 'c64', name: "Микрораптор", latin: "Microraptor gui", rarity: 4, cls: 'Летающий', atk: 35, arm: 25, era: 'Меловой', imageId: 'd6' },
+      { id: 'c65', name: "И ци", latin: "Yi qi", rarity: 7, cls: 'Летающий', atk: 20, arm: 30, era: 'Юрский', imageId: 'd15' },
+      { id: 'c66', name: "Кетцалькоатль", latin: "Quetzalcoatlus northropi", rarity: 8, cls: 'Летающий', atk: 160, arm: 40, era: 'Меловой', imageId: 'd15' },
+      { id: 'c67', name: "Дейнохейрус лапы", latin: "Deinocheirus mirificus (лапы)", rarity: 8, cls: 'Универсал', atk: 67, arm: 76, era: 'Меловой', imageId: 'd18' },
+      { id: 'c68', name: "Натовенатор", latin: "Natovenator polydontus", rarity: 2, cls: 'Водный', atk: 22, arm: 10, era: 'Меловой', imageId: 'd6' },
+      { id: 'c69', name: "Бейшаньлун", latin: "Beishanlong grandis", rarity: 3, cls: 'Универсал', atk: 36, arm: 28, era: 'Меловой', imageId: 'd16' },
+      { id: 'c70', name: "Трицератопс", latin: "Triceratops horridus", rarity: 3, cls: 'Травоядный', atk: 80, arm: 120, era: 'Меловой', imageId: 'd2' },
+      { id: 'c71', name: "Стиракозавр", latin: "Styracosaurus albertensis", rarity: 5, cls: 'Травоядный', atk: 82, arm: 118, era: 'Меловой', imageId: 'd17' },
+      { id: 'c72', name: "Космоцератопс", latin: "Kosmoceratops richardsoni", rarity: 6, cls: 'Травоядный', atk: 90, arm: 125, era: 'Меловой', imageId: 'd17' },
+      { id: 'c73', name: "Медузацератопс", latin: "Medusaceratops lokii", rarity: 4, cls: 'Травоядный', atk: 76, arm: 114, era: 'Меловой', imageId: 'd2' },
+      { id: 'c74', name: "Пахиринозавр", latin: "Pachyrhinosaurus lakustai", rarity: 3, cls: 'Травоядный', atk: 65, arm: 93, era: 'Меловой', imageId: 'd2' },
+      { id: 'c75', name: "Диаблоцератопс", latin: "Diabloceratops eatoni", rarity: 6, cls: 'Травоядный', atk: 88, arm: 106, era: 'Меловой', imageId: 'd17' },
+      { id: 'c76', name: "Теризинозавр", latin: "Therizinosaurus cheloniformis", rarity: 8, cls: 'Универсал', atk: 130, arm: 60, era: 'Меловой', imageId: 'd18' },
+      { id: 'c77', name: "Эрликозавр", latin: "Erlikosaurus andrewsi", rarity: 6, cls: 'Универсал', atk: 95, arm: 45, era: 'Меловой', imageId: 'd18' },
+      { id: 'c78', name: "Дейнохейрус", latin: "Deinocheirus mirificus", rarity: 4, cls: 'Универсал', atk: 92, arm: 38, era: 'Меловой', imageId: 'd18' },
+      { id: 'c79', name: "Алиорам", latin: "Alioramus remotus", rarity: 3, cls: 'Хищник', atk: 81, arm: 45, era: 'Меловой', imageId: 'd1' },
+      { id: 'c80', name: "Тарбозавр", latin: "Tarbosaurus bataar", rarity: 7, cls: 'Хищник', atk: 155, arm: 75, era: 'Меловой', imageId: 'd1' },
+      { id: 'c81', name: "Тимурленгия", latin: "Timurlengia euotica", rarity: 6, cls: 'Хищник', atk: 125, arm: 66, era: 'Меловой', imageId: 'd1' },
+      { id: 'c82', name: "Тираннозавр Рекс", latin: "Tyrannosaurus rex", rarity: 8, cls: 'Хищник', atk: 160, arm: 80, era: 'Меловой', imageId: 'd1' },
+      { id: 'c83', name: "T-Rex Modern Art", latin: "Tyrannosaurus rex (Modern Art)", rarity: 10, cls: 'Реликт', atk: 200, arm: 20, era: 'Голоцен', imageId: 'd1' },
+      { id: 'c84', name: "T-Rex в костюме", latin: "Tyrannosaurus rex (man in Inflatable costume)", rarity: 9, cls: 'Реликт', atk: 20, arm: 20, era: 'Голоцен', imageId: 'd1' },
+      { id: 'c85', name: "Кархародонтозавр", latin: "Carcharodontosaurus saharicus", rarity: 4, cls: 'Хищник', atk: 150, arm: 65, era: 'Меловой', imageId: 'd10' },
+      { id: 'c86', name: "Ругопс", latin: "Rugops primus", rarity: 3, cls: 'Хищник', atk: 146, arm: 68, era: 'Меловой', imageId: 'd10' },
+      { id: 'c87', name: "Абелизавр", latin: "Abelisaurus comahuensis", rarity: 4, cls: 'Хищник', atk: 142, arm: 58, era: 'Меловой', imageId: 'd10' },
+      { id: 'c88', name: "Карнотавр", latin: "Carnotaurus sastrei", rarity: 4, cls: 'Хищник', atk: 157, arm: 53, era: 'Меловой', imageId: 'd10' },
+      { id: 'c89', name: "Аллозавр", latin: "Allosaurus fragilis", rarity: 2, cls: 'Хищник', atk: 130, arm: 72, era: 'Юрский', imageId: 'd13' },
+      { id: 'c90', name: "Дилофозавр", latin: "Dilophosaurus wetherilli", rarity: 3, cls: 'Хищник', atk: 95, arm: 43, era: 'Юрский', imageId: 'd19' },
+      { id: 'c91', name: "Спинозавр", latin: "Spinosaurus aegyptiacus", rarity: 2, cls: 'Хищник', atk: 152, arm: 82, era: 'Меловой', imageId: 'd7' },
+      { id: 'c92', name: "Барионикс", latin: "Baryonyx walkeri", rarity: 3, cls: 'Хищник', atk: 148, arm: 76, era: 'Меловой', imageId: 'd7' },
+      { id: 'c93', name: "Гиганотозавр", latin: "Giganotosaurus carolinii", rarity: 4, cls: 'Хищник', atk: 158, arm: 76, era: 'Меловой', imageId: 'd13' },
+      { id: 'c94', name: "Мегалозавр", latin: "Megalosaurus bucklandii", rarity: 3, cls: 'Хищник', atk: 130, arm: 56, era: 'Юрский', imageId: 'd13' },
+      { id: 'c95', name: "Дасплетозавр", latin: "Daspletosaurus torosus", rarity: 5, cls: 'Хищник', atk: 142, arm: 72, era: 'Меловой', imageId: 'd1' },
+      { id: 'c96', name: "Мозазавр", latin: "Mosasaurus hoffmannii", rarity: 6, cls: 'Водный', atk: 180, arm: 80, era: 'Меловой', imageId: 'd7' },
+      { id: 'c97', name: "Платекарп", latin: "Platecarpus tympaniticus", rarity: 2, cls: 'Водный', atk: 68, arm: 42, era: 'Меловой', imageId: 'd7' },
+      { id: 'c98', name: "Клидаст", latin: "Clidastes propython", rarity: 1, cls: 'Водный', atk: 48, arm: 38, era: 'Меловой', imageId: 'd7' },
+      { id: 'c99', name: "Метеорит", latin: "Meteorite / Метеорит", rarity: 10, cls: 'Реликт', atk: 900, arm: 0, era: 'Меловой', imageId: 'd1' },
+      { id: 'c100', name: "Древняя ДНК", latin: "DNA / ДНК", rarity: 10, cls: 'Реликт', atk: 0, arm: 1000, era: 'Голоцен', imageId: 'd11' },
+      { id: 'c101', name: "Плезиозавр", latin: "Plesiosaurus dolichodeirus", rarity: 2, cls: 'Водный', atk: 56, arm: 38, era: 'Юрский', imageId: 'd7' },
+      { id: 'c102', name: "Эласмозавр", latin: "Elasmosaurus platyurus", rarity: 3, cls: 'Водный', atk: 75, arm: 45, era: 'Меловой', imageId: 'd7' },
+      { id: 'c103', name: "Ихтиозавр", latin: "Ichthyosaurus communis", rarity: 1, cls: 'Водный', atk: 42, arm: 25, era: 'Юрский', imageId: 'd7' },
+      { id: 'c104', name: "Шонизавр", latin: "Shonisaurus popularis", rarity: 8, cls: 'Водный', atk: 38, arm: 180, era: 'Триас', imageId: 'd7' },
+      { id: 'c105', name: "Офтальмозавр", latin: "Ophthalmosaurus icenicus", rarity: 4, cls: 'Водный', atk: 40, arm: 30, era: 'Юрский', imageId: 'd7' },
+      { id: 'c106', name: "Лиоплевродон", latin: "Liopleurodon ferox", rarity: 6, cls: 'Водный', atk: 120, arm: 78, era: 'Юрский', imageId: 'd7' },
+      { id: 'c107', name: "Плиозавр Функе", latin: "Pliosaurus funkei", rarity: 7, cls: 'Водный', atk: 165, arm: 81, era: 'Юрский', imageId: 'd7' },
+      { id: 'c108', name: "Зухомим", latin: "Suchomimus tenerensis", rarity: 4, cls: 'Хищник', atk: 125, arm: 63, era: 'Меловой', imageId: 'd7' },
+      { id: 'c109', name: "Титанобоа", latin: "Titanoboa cerrejonensis", rarity: 6, cls: 'Хищник', atk: 105, arm: 55, era: 'Палеоген', imageId: 'd7' },
+      { id: 'c110', name: "Таметара", latin: "Tametara mirim", rarity: 3, cls: 'Хищник', atk: 19, arm: 29, era: 'Меловой', imageId: 'd10' },
+      { id: 'c111', name: "Цинтаозавр", latin: "Tsintaosaurus spinorhinus", rarity: 2, cls: 'Травоядный', atk: 52, arm: 64, era: 'Меловой', imageId: 'd8' },
+      { id: 'c112', name: "Конкавенатор", latin: "Concavenator corcovatus", rarity: 5, cls: 'Хищник', atk: 67, arm: 45, era: 'Меловой', imageId: 'd13' },
+      { id: 'c113', name: "Гигантораптор", latin: "Gigantoraptor erlianensis", rarity: 4, cls: 'Универсал', atk: 52, arm: 35, era: 'Меловой', imageId: 'd16' },
+      { id: 'c114', name: "Сучжоузавр", latin: "Suzhousaurus megatherioides", rarity: 7, cls: 'Универсал', atk: 112, arm: 52, era: 'Меловой', imageId: 'd18' },
+      { id: 'c115', name: "Ютираннус", latin: "Yutyrannus huali", rarity: 6, cls: 'Хищник', atk: 88, arm: 63, era: 'Меловой', imageId: 'd1' },
+      { id: 'c116', name: "Ориктодромей", latin: "Oryctodromeus cubicularis", rarity: 2, cls: 'Травоядный', atk: 16, arm: 22, era: 'Меловой', imageId: 'd11' },
+      { id: 'c117', name: "Протоцератопс", latin: "Protoceratops andrewsi", rarity: 3, cls: 'Травоядный', atk: 38, arm: 50, era: 'Меловой', imageId: 'd2' },
+      { id: 'c118', name: "Репеномам", latin: "Repenomamus giganticus", rarity: 2, cls: 'Хищник', atk: 21, arm: 9, era: 'Меловой', imageId: 'd6' },
+      { id: 'c119', name: "Юрамайя", latin: "Juramaia sinensis", rarity: 3, cls: 'Универсал', atk: 7, arm: 4, era: 'Юрский', imageId: 'd6' },
+      { id: 'c120', name: "Уатчитодон", latin: "Uatchitodon schneideri", rarity: 9, cls: 'Хищник', atk: 141, arm: 20, era: 'Триас', imageId: 'd7' },
     ];
 
-    // 12 PROPERTIES
     const ALL_PROPERTIES = [
-      { id: 'p1',  name: 'Свирепый напор',   shortBadge: '+80 СИЛА',        desc: '+80 к Атаке в бою' },
-      { id: 'p2',  name: 'Каменный панцирь', shortBadge: '+80 БРОНЯ',       desc: '+80 к Броне в бою' },
-      { id: 'p3',  name: 'Мега-сила',        shortBadge: '+100 СИЛА',       desc: '+100 к Атаке динозавра!' },
-      { id: 'p4',  name: 'Глухая оборона',   shortBadge: '+100 БРОНЯ',      desc: '+100 к Броне динозавра!' },
-      { id: 'p5',  name: 'Ярость хищника',   shortBadge: '+90 СИЛА*',       desc: '+90 Силы Хищникам (+30 ост.)' },
-      { id: 'p6',  name: 'Древний щит',      shortBadge: '+90 БРОНЯ*',      desc: '+90 Брони Травоядным (+30 ост.)' },
-      { id: 'p7',  name: 'Ядовитый укус',    shortBadge: '-50% БРОНИ ВРАГА', desc: 'Уменьшает броню врага в 2 раза' },
-      { id: 'p8',  name: 'Камуфляж',         shortBadge: 'ОТМЕНА / ПАС',     desc: 'Бой отменен: карты вернутся' },
-      { id: 'p9',  name: 'В янтарь',         shortBadge: 'СПАСЕНИЕ КАРТЫ',  desc: 'При проигрыше карта сгорает, но не достается врагу' },
-      { id: 'p10', name: 'Реванш',           shortBadge: 'РЕВАНШ (III+)',   desc: 'Победа, если редкость врага выше на III+' },
-      { id: 'p11', name: 'Тагомайзер',       shortBadge: 'КОНТРАТАКА',      desc: 'Если броня защитника > атаки = победа' },
-      { id: 'p12', name: 'Зов стаи',         shortBadge: '+30 ЗА ТРОФЕЙ',   desc: '+30 Силы за каждую карту эпохи в бите' }
+      { id: 'p1', name: "Энергия (+10)", shortBadge: "+10 СИЛА/БРОНЯ", desc: "Даёт 10 баллов к атаке и защите", rarity: 1, type: 'stat', atkBonus: 10, armBonus: 10 },
+      { id: 'p2', name: "Энергия (+20)", shortBadge: "+20 СИЛА/БРОНЯ", desc: "Даёт 20 баллов к атаке и защите", rarity: 2, type: 'stat', atkBonus: 20, armBonus: 20 },
+      { id: 'p3', name: "Энергия (+30)", shortBadge: "+30 СИЛА/БРОНЯ", desc: "Даёт 30 баллов к атаке и защите", rarity: 5, type: 'stat', atkBonus: 30, armBonus: 30 },
+      { id: 'p4', name: "Энергия (+50)", shortBadge: "+50 СИЛА/БРОНЯ", desc: "Даёт 50 баллов к атаке и защите", rarity: 7, type: 'stat', atkBonus: 50, armBonus: 50 },
+      { id: 'p5', name: "Энергия (+75)", shortBadge: "+75 СИЛА/БРОНЯ", desc: "Даёт 75 баллов к атаке и защите", rarity: 9, type: 'stat', atkBonus: 75, armBonus: 75 },
+      { id: 'p6', name: "Сила (+10)", shortBadge: "+10 СИЛА", desc: "Даёт 10 баллов к атаке", rarity: 1, type: 'stat', atkBonus: 10, armBonus: 0 },
+      { id: 'p7', name: "Сила (+20)", shortBadge: "+20 СИЛА", desc: "Даёт 20 баллов к атаке", rarity: 2, type: 'stat', atkBonus: 20, armBonus: 0 },
+      { id: 'p8', name: "Сила (+30)", shortBadge: "+30 СИЛА", desc: "Даёт 30 баллов к атаке", rarity: 5, type: 'stat', atkBonus: 30, armBonus: 0 },
+      { id: 'p9', name: "Сила (+50)", shortBadge: "+50 СИЛА", desc: "Даёт 50 баллов к атаке", rarity: 8, type: 'stat', atkBonus: 50, armBonus: 0 },
+      { id: 'p10', name: "Сила (+100)", shortBadge: "+100 СИЛА", desc: "Даёт 100 баллов к атаке", rarity: 9, type: 'stat', atkBonus: 100, armBonus: 0 },
+      { id: 'p11', name: "Защита (+10)", shortBadge: "+10 БРОНЯ", desc: "Даёт 10 баллов к защите", rarity: 1, type: 'stat', atkBonus: 0, armBonus: 10 },
+      { id: 'p12', name: "Защита (+20)", shortBadge: "+20 БРОНЯ", desc: "Даёт 20 баллов к защите", rarity: 2, type: 'stat', atkBonus: 0, armBonus: 20 },
+      { id: 'p13', name: "Защита (+30)", shortBadge: "+30 БРОНЯ", desc: "Даёт 30 баллов к защите", rarity: 5, type: 'stat', atkBonus: 0, armBonus: 30 },
+      { id: 'p14', name: "Защита (+50)", shortBadge: "+50 БРОНЯ", desc: "Даёт 50 баллов к защите", rarity: 8, type: 'stat', atkBonus: 0, armBonus: 50 },
+      { id: 'p15', name: "Защита (+75)", shortBadge: "+75 БРОНЯ", desc: "Даёт 75 баллов к защите", rarity: 9, type: 'stat', atkBonus: 0, armBonus: 75 },
+      { id: 'p16', name: "Отступить", shortBadge: "ОТСТУПЛЕНИЕ", desc: "Схватка отменяется, каждый убирает карту в свою биту", rarity: 6, type: 'retreat', atkBonus: 0, armBonus: 0 },
+      { id: 'p17', name: "Тагомайзер", shortBadge: "КОНТРАТАКА", desc: "Очки защиты становятся очками атаки", rarity: 8, type: 'thagomizer', atkBonus: 0, armBonus: 0 },
+      { id: 'p18', name: "Янтарь (Amber)", shortBadge: "В ЯНТАРЬ", desc: "При проигрыше карта уходит в вашу биту", rarity: 8, type: 'amber', atkBonus: 0, armBonus: 0 },
+      { id: 'p19', name: "Стая (Flock)", shortBadge: "СТАЯ (+АТК)", desc: "Добавляет карту из запаса: урон суммируется", rarity: 7, type: 'flock', atkBonus: 0, armBonus: 0 },
+      { id: 'p20', name: "Яд (Venom)", shortBadge: "ЯД (-50% БРОНИ)", desc: "Снижает защиту противника вдвое", rarity: 6, type: 'venom', atkBonus: 0, armBonus: 0 },
+      { id: 'p21', name: "Яд (Poisoned)", shortBadge: "ЯД (-50% АТАКИ)", desc: "Снижает атаку противника вдвое", rarity: 8, type: 'poisoned', atkBonus: 0, armBonus: 0 },
+      { id: 'p22', name: "Иммунитет", shortBadge: "ИММУНИТЕТ", desc: "Отменяет действие карты свойства противника", rarity: 8, type: 'immunity', atkBonus: 0, armBonus: 0 },
+      { id: 'p23', name: "Переходное звено", shortBadge: "СМЕНА ЗВЕНА", desc: "Уберите слабую карту в свою биту и возьмите следующую", rarity: 7, type: 'transition', atkBonus: 0, armBonus: 0 },
+      { id: 'p24', name: "Естественный отбор", shortBadge: "ОТБОР (ПОПУЛЯЦИЯ)", desc: "Побеждает более частая карта (меньшая редкость)", rarity: 7, type: 'selection', atkBonus: 0, armBonus: 0 },
+      { id: 'p25', name: "Миграция", shortBadge: "МИГРАЦИЯ", desc: "Вслепую обменяйтесь случайными картами", rarity: 7, type: 'migration', atkBonus: 0, armBonus: 0 },
+      { id: 'p26', name: "Рефугиум", shortBadge: "РЕФУГИУМ (РЕДКОСТЬ)", desc: "Побеждает самая редкая карта", rarity: 6, type: 'refugium', atkBonus: 0, armBonus: 0 },
+      { id: 'p27', name: "Лоб в лоб", shortBadge: "ЛОБ В ЛОБ (АТК)", desc: "Сравниваются атаки, побеждает более мощная", rarity: 5, type: 'head_to_head', atkBonus: 0, armBonus: 0 },
+      { id: 'p28', name: "Оборона", shortBadge: "ОБОРОНА (БРОНЯ)", desc: "Сравнивается защита, побеждает более защищённая", rarity: 5, type: 'defense_clash', atkBonus: 0, armBonus: 0 },
+      { id: 'p29', name: "Великая битва", shortBadge: "ВЕЛИКАЯ БИТВА", desc: "Каждый добавляет карту, атака и броня суммируются", rarity: 8, type: 'great_battle', atkBonus: 0, armBonus: 0 },
+      { id: 'p30', name: "Деэкстинкция", shortBadge: "ДЕЭКСТИНКЦИЯ", desc: "Верните себе последнюю проигранную карту из биты врага", rarity: 10, type: 'deextinction', atkBonus: 0, armBonus: 0 },
     ];
 
     const PROP_ICONS = {
-      p1: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32 L32 8 M20 8 L32 8 L32 20"/></svg>`,
-      p2: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 L32 12 L32 24 C32 30 20 36 20 36 C20 36 8 30 8 24 L8 12 Z"/></svg>`,
-      p3: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 28 C16 16 28 12 34 8 C28 20 24 32 12 28 Z"/></svg>`,
-      p4: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="10" width="24" height="20" rx="3"/><line x1="20" y1="10" x2="20" y2="30"/></svg>`,
-      p5: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 30 C15 15 25 10 32 8 C28 22 22 28 10 30 Z"/></svg>`,
-      p6: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="7"/></svg>`,
-      p7: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16 C12 10 28 10 28 16 C28 24 20 32 20 32 C20 32 12 24 12 16 Z"/></svg>`,
-      p8: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="20" r="13" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="4"/></svg>`,
-      p9: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><polygon points="20,6 32,15 28,32 12,32 8,15"/></svg>`,
-      p10: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 14 L20 26 L32 14 M8 22 L20 34 L32 22"/></svg>`,
-      p11: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 20 L26 8 L24 24 L34 20 L20 34"/></svg>`,
-      p12: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="18" r="6"/><circle cx="26" cy="18" r="6"/><circle cx="20" cy="28" r="6"/></svg>`
+      p1: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4 L10 22 L20 22 L16 36 L30 18 L20 18 Z"/></svg>`,
+      p2: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4 L10 22 L20 22 L16 36 L30 18 L20 18 Z"/></svg>`,
+      p3: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4 L10 22 L20 22 L16 36 L30 18 L20 18 Z"/></svg>`,
+      p4: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4 L10 22 L20 22 L16 36 L30 18 L20 18 Z"/></svg>`,
+      p5: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4 L10 22 L20 22 L16 36 L30 18 L20 18 Z"/></svg>`,
+      p6: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32 L32 8 M20 8 L32 8 L32 20"/></svg>`,
+      p7: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32 L32 8 M20 8 L32 8 L32 20"/></svg>`,
+      p8: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32 L32 8 M20 8 L32 8 L32 20"/></svg>`,
+      p9: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32 L32 8 M20 8 L32 8 L32 20"/></svg>`,
+      p10: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 32 L32 8 M20 8 L32 8 L32 20"/></svg>`,
+      p11: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 L32 12 L32 24 C32 30 20 36 20 36 C20 36 8 30 8 24 L8 12 Z"/></svg>`,
+      p12: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 L32 12 L32 24 C32 30 20 36 20 36 C20 36 8 30 8 24 L8 12 Z"/></svg>`,
+      p13: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 L32 12 L32 24 C32 30 20 36 20 36 C20 36 8 30 8 24 L8 12 Z"/></svg>`,
+      p14: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 L32 12 L32 24 C32 30 20 36 20 36 C20 36 8 30 8 24 L8 12 Z"/></svg>`,
+      p15: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 L32 12 L32 24 C32 30 20 36 20 36 C20 36 8 30 8 24 L8 12 Z"/></svg>`,
+      p16: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20 L28 20 M18 14 L12 20 L18 26"/></svg>`,
+      p17: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 20 L26 8 L24 24 L34 20 L20 34"/></svg>`,
+      p18: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><polygon points="20,6 32,15 28,32 12,32 8,15"/></svg>`,
+      p19: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="18" r="5"/><circle cx="26" cy="18" r="5"/><circle cx="20" cy="27" r="5"/></svg>`,
+      p20: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 8 C20 8 12 20 12 26 C12 31 16 34 20 34 C24 34 28 31 28 26 C28 20 20 8 20 8 Z"/></svg>`,
+      p21: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="18" r="10"/><circle cx="17" cy="16" r="2" fill="currentColor"/><circle cx="23" cy="16" r="2" fill="currentColor"/><path d="M16 28 L24 28 M14 34 L26 34"/></svg>`,
+      p22: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><polygon points="20,4 25,14 36,15 28,24 30,35 20,30 10,35 12,24 4,15 15,14"/></svg>`,
+      p23: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="20" r="6"/><circle cx="28" cy="20" r="6"/><line x1="18" y1="20" x2="22" y2="20"/></svg>`,
+      p24: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="12" r="4"/><circle cx="12" cy="28" r="4"/><circle cx="28" cy="28" r="4"/><path d="M18 16 L14 24 M22 16 L26 24"/></svg>`,
+      p25: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16 L28 16 M24 12 L28 16 L24 20 M32 24 L12 24 M16 20 L12 24 L16 28"/></svg>`,
+      p26: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><polygon points="20,6 34,16 20,34 6,16"/></svg>`,
+      p27: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12 L20 20 L10 28 M30 12 L20 20 L30 28"/></svg>`,
+      p28: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="10" width="9" height="20" rx="2"/><rect x="21" y="10" width="9" height="20" rx="2"/></svg>`,
+      p29: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 8 L32 32 M32 8 L8 32 M20 4 L20 36 M4 20 L36 20"/></svg>`,
+      p30: `<svg viewBox="0 0 40 40" class="w-5 h-5 ink-svg" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 A14 14 0 1 0 34 20 M34 14 L34 20 L28 20"/></svg>`
     };
 
     // Inject Emblem
@@ -838,6 +975,7 @@
         const rares = ALL_DINOSAURS.filter(d => d.rarity >= 7 && d.rarity <= 8);
         const legendaries = ALL_DINOSAURS.filter(d => d.rarity >= 9);
 
+        // 6 Dinosaurs per pack: 3 commons, 2 uncommons, 1 rare/legendary
         for (let i = 0; i < 3; i++) {
           dinos.push({ ...rand(commons), kind: 'dino', uid: `${tag}_d_${p}_${i}_${Math.random().toString(36).slice(2, 6)}` });
         }
@@ -847,8 +985,23 @@
         const topPool = Math.random() < 0.25 ? legendaries : rares;
         dinos.push({ ...rand(topPool), kind: 'dino', uid: `${tag}_d_${p}_5_${Math.random().toString(36).slice(2, 6)}` });
 
-        const p1 = rand(ALL_PROPERTIES);
-        const p2 = rand(ALL_PROPERTIES.filter(x => x.id !== p1.id));
+        // 2 Properties: sampled weighted by rarity
+        const propCommons = ALL_PROPERTIES.filter(pr => pr.rarity <= 3);
+        const propUncommons = ALL_PROPERTIES.filter(pr => pr.rarity >= 4 && pr.rarity <= 6);
+        const propRares = ALL_PROPERTIES.filter(pr => pr.rarity >= 7);
+
+        const pickProp = (excludeId = null) => {
+          const roll = Math.random();
+          let pool = roll < 0.55 ? propCommons : (roll < 0.85 ? propUncommons : propRares);
+          if (excludeId) {
+            const filtered = pool.filter(x => x.id !== excludeId);
+            if (filtered.length > 0) pool = filtered;
+          }
+          return rand(pool);
+        };
+
+        const p1 = pickProp();
+        const p2 = pickProp(p1.id);
         props.push({ ...p1, kind: 'prop', uid: `${tag}_p_${p}_0_${Math.random().toString(36).slice(2, 6)}` });
         props.push({ ...p2, kind: 'prop', uid: `${tag}_p_${p}_1_${Math.random().toString(36).slice(2, 6)}` });
       }
@@ -1088,35 +1241,64 @@
     function computeCombatStats() {
       const pD = state.activePlayerDino;
       const aD = state.activeAiDino;
-      const pP = state.activePlayerProp;
-      const aP = state.activeAiProp;
-      const plAtkTurn = state.attacker === 'player';
+      let pP = state.activePlayerProp;
+      let aP = state.activeAiProp;
+
+      // Handle Immunity (p22) - cancels opponent's property completely!
+      if (pP && pP.type === 'immunity') aP = null;
+      if (aP && aP.type === 'immunity') pP = null;
 
       let pAtk = pD ? pD.atk : 0;
       let pArm = pD ? pD.arm : 0;
       let aAtk = aD ? aD.atk : 0;
       let aArm = aD ? aD.arm : 0;
 
+      // Apply Player Property effects
       if (pD && pP) {
-        if (pP.id === 'p1') pAtk += 80;
-        if (pP.id === 'p2') pArm += 80;
-        if (pP.id === 'p3') pAtk += 100;
-        if (pP.id === 'p4') pArm += 100;
-        if (pP.id === 'p5') pAtk += (pD.cls === 'Хищник' ? 90 : 30);
-        if (pP.id === 'p6') pArm += (pD.cls === 'Травоядный' ? 90 : 30);
-        if (pP.id === 'p7' && plAtkTurn && aD) aArm = Math.floor(aArm * 0.5);
-        if (pP.id === 'p12') pAtk += state.playerTrophies.filter(t => t.card.era === pD.era).length * 30;
+        if (pP.type === 'stat') {
+          pAtk += pP.atkBonus || 0;
+          pArm += pP.armBonus || 0;
+        } else if (pP.type === 'thagomizer') {
+          pAtk += pArm; // Counterattack: defense becomes attack!
+        } else if (pP.type === 'venom') {
+          if (aD) aArm = Math.floor(aArm * 0.5);
+        } else if (pP.type === 'poisoned') {
+          if (aD) aAtk = Math.floor(aAtk * 0.5);
+        } else if (pP.type === 'flock') {
+          const ally = (state.mode === 'tactics')
+            ? state.playerHand.find(c => c.kind === 'dino' && c.uid !== pD.uid)
+            : state.playerDeck[0];
+          if (ally) pAtk += ally.atk;
+        } else if (pP.type === 'great_battle') {
+          const ally = (state.mode === 'tactics')
+            ? state.playerHand.find(c => c.kind === 'dino' && c.uid !== pD.uid)
+            : state.playerDeck[0];
+          if (ally) { pAtk += ally.atk; pArm += ally.arm; }
+        }
       }
 
+      // Apply AI Property effects
       if (aD && aP) {
-        if (aP.id === 'p1') aAtk += 80;
-        if (aP.id === 'p2') aArm += 80;
-        if (aP.id === 'p3') aAtk += 100;
-        if (aP.id === 'p4') aArm += 100;
-        if (aP.id === 'p5') aAtk += (aD.cls === 'Хищник' ? 90 : 30);
-        if (aP.id === 'p6') aArm += (aD.cls === 'Травоядный' ? 90 : 30);
-        if (aP.id === 'p7' && !plAtkTurn && pD) pArm = Math.floor(pArm * 0.5);
-        if (aP.id === 'p12') aAtk += state.aiTrophies.filter(t => t.card.era === aD.era).length * 30;
+        if (aP.type === 'stat') {
+          aAtk += aP.atkBonus || 0;
+          aArm += aP.armBonus || 0;
+        } else if (aP.type === 'thagomizer') {
+          aAtk += aArm;
+        } else if (aP.type === 'venom') {
+          if (pD) pArm = Math.floor(pArm * 0.5);
+        } else if (aP.type === 'poisoned') {
+          if (pD) pAtk = Math.floor(pAtk * 0.5);
+        } else if (aP.type === 'flock') {
+          const ally = (state.mode === 'tactics')
+            ? state.aiHand.find(c => c.kind === 'dino' && c.uid !== aD.uid)
+            : state.aiDeck[0];
+          if (ally) aAtk += ally.atk;
+        } else if (aP.type === 'great_battle') {
+          const ally = (state.mode === 'tactics')
+            ? state.aiHand.find(c => c.kind === 'dino' && c.uid !== aD.uid)
+            : state.aiDeck[0];
+          if (ally) { aAtk += ally.atk; aArm += ally.arm; }
+        }
       }
 
       return { pAtk, pArm, aAtk, aArm };
@@ -1135,27 +1317,31 @@
       const aiAtkTurn = state.attacker === 'ai';
       const live = computeCombatStats();
 
+      // If player played a strong property and AI has Immunity (p22), counter it!
+      if (state.activePlayerProp) {
+        const immunity = aiProps.find(p => p.type === 'immunity');
+        if (immunity) { state.activeAiProp = immunity; return; }
+      }
+
       const aiLosing = aiAtkTurn ? (live.aAtk <= live.pArm) : (live.pAtk > live.aArm);
 
       if (aiLosing) {
         for (const prop of aiProps) {
           if (aiAtkTurn) {
-            if (prop.id === 'p1' && (aiD.atk + 80 > live.pArm)) { state.activeAiProp = prop; return; }
-            if (prop.id === 'p3' && (aiD.atk + 100 > live.pArm)) { state.activeAiProp = prop; return; }
-            if (prop.id === 'p5' && (aiD.atk + (aiD.cls === 'Хищник' ? 90 : 30) > live.pArm)) { state.activeAiProp = prop; return; }
-            if (prop.id === 'p7' && (aiD.atk > Math.floor(live.pArm * 0.5))) { state.activeAiProp = prop; return; }
+            if (prop.type === 'stat' && (aiD.atk + prop.atkBonus > live.pArm)) { state.activeAiProp = prop; return; }
+            if (prop.type === 'venom' && (aiD.atk > Math.floor(live.pArm * 0.5))) { state.activeAiProp = prop; return; }
+            if (prop.type === 'thagomizer' && (aiD.atk + aiD.arm > live.pArm)) { state.activeAiProp = prop; return; }
           } else {
-            if (prop.id === 'p2' && (live.pAtk <= aiD.arm + 80)) { state.activeAiProp = prop; return; }
-            if (prop.id === 'p4' && (live.pAtk <= aiD.arm + 100)) { state.activeAiProp = prop; return; }
-            if (prop.id === 'p6' && (live.pAtk <= aiD.arm + (aiD.cls === 'Травоядный' ? 90 : 30))) { state.activeAiProp = prop; return; }
+            if (prop.type === 'stat' && (live.pAtk <= aiD.arm + prop.armBonus)) { state.activeAiProp = prop; return; }
+            if (prop.type === 'poisoned' && (Math.floor(live.pAtk * 0.5) <= aiD.arm)) { state.activeAiProp = prop; return; }
           }
-          if (prop.id === 'p10' && (plD.rarity - aiD.rarity >= 3)) { state.activeAiProp = prop; return; }
-          if ((prop.id === 'p8' || prop.id === 'p9') && aiD.rarity >= 6) { state.activeAiProp = prop; return; }
-        }
-      } else {
-        if (!aiAtkTurn && live.aArm > live.pAtk) {
-          const p11 = aiProps.find(p => p.id === 'p11');
-          if (p11 && plD.rarity >= 4) { state.activeAiProp = p11; return; }
+          // Special mechanics
+          if (prop.type === 'refugium' && (aiD.rarity > plD.rarity)) { state.activeAiProp = prop; return; }
+          if (prop.type === 'selection' && (aiD.rarity < plD.rarity)) { state.activeAiProp = prop; return; }
+          if (prop.type === 'head_to_head' && (live.aAtk > live.pAtk)) { state.activeAiProp = prop; return; }
+          if (prop.type === 'defense_clash' && (live.aArm > live.pArm)) { state.activeAiProp = prop; return; }
+          if (prop.type === 'deextinction' && state.playerTrophies.some(t => t.stolen)) { state.activeAiProp = prop; return; }
+          if ((prop.type === 'retreat' || prop.type === 'amber') && aiD.rarity >= 6) { state.activeAiProp = prop; return; }
         }
       }
     }
@@ -1172,11 +1358,11 @@
 
       const pD = state.activePlayerDino;
       const aD = state.activeAiDino;
-      const pP = state.activePlayerProp;
-      const aP = state.activeAiProp;
+      let pP = state.activePlayerProp;
+      let aP = state.activeAiProp;
       const plAtkTurn = state.attacker === 'player';
 
-      // Remove properties
+      // Remove properties from hands/inventory
       if (pP) {
         if (state.mode === 'tactics') state.playerHand = state.playerHand.filter(c => c.uid !== pP.uid);
         else state.playerProps = state.playerProps.filter(p => p.uid !== pP.uid);
@@ -1191,44 +1377,74 @@
       const delayBeforeMath = aP ? 600 : 120;
 
       setTimeout(() => {
-        // Camouflage cancellation
-        if ((pP && pP.id === 'p8') || (aP && aP.id === 'p8')) {
-          const msg = (pP && pP.id === 'p8') ? 'Камуфляж — динозавры вернулись' : 'Враг применил Камуфляж — бой отменён';
-          if (state.mode === 'classic') {
-            state.playerDeck.push(pD);
-            state.aiDeck.push(aD);
+        // 1. Retreat (p16): combat is cancelled peacefully!
+        if ((pP && pP.type === 'retreat') || (aP && aP.type === 'retreat')) {
+          state.playerTrophies.push({ card: pD, stolen: false });
+          state.aiTrophies.push({ card: aD, stolen: false });
+          if (state.mode === 'tactics') {
+            state.playerHand = state.playerHand.filter(c => c.uid !== pD.uid);
+            state.aiHand = state.aiHand.filter(c => c.uid !== aD.uid);
           }
-          showOutcomeBanner(msg, 'neutral', () => {
+          showOutcomeBanner('Отступление! Карты ушли в свои биты', 'neutral', () => {
+            state.round += 1;
             state.activePlayerDino = null;
             state.activeAiDino = null;
+            state.activePlayerProp = null;
+            state.activeAiProp = null;
             state.attacker = state.attacker === 'player' ? 'ai' : 'player';
             beginRound();
           });
           return;
         }
 
+        // 2. Migration (p25): swap random card between players
+        if ((pP && pP.type === 'migration') || (aP && aP.type === 'migration')) {
+          if (state.mode === 'tactics' && state.playerHand.length > 0 && state.aiHand.length > 0) {
+            const pIdx = Math.floor(Math.random() * state.playerHand.length);
+            const aIdx = Math.floor(Math.random() * state.aiHand.length);
+            const tmp = state.playerHand[pIdx];
+            state.playerHand[pIdx] = state.aiHand[aIdx];
+            state.aiHand[aIdx] = tmp;
+          } else if (state.mode === 'classic' && state.playerDeck.length > 0 && state.aiDeck.length > 0) {
+            const pIdx = Math.floor(Math.random() * state.playerDeck.length);
+            const aIdx = Math.floor(Math.random() * state.aiDeck.length);
+            const tmp = state.playerDeck[pIdx];
+            state.playerDeck[pIdx] = state.aiDeck[aIdx];
+            state.aiDeck[aIdx] = tmp;
+          }
+        }
+
+        // 3. Compute stats with properties
         const { pAtk, pArm, aAtk, aArm } = computeCombatStats();
-        let winner = plAtkTurn
-          ? (pAtk > aArm ? 'player' : 'ai')
-          : (aAtk > pArm ? 'ai' : 'player');
+        let winner = 'player';
+        let specialNote = '';
+
+        // Check special combat types
+        if ((pP && pP.type === 'refugium') || (aP && aP.type === 'refugium')) {
+          if (pD.rarity > aD.rarity) winner = 'player';
+          else if (aD.rarity > pD.rarity) winner = 'ai';
+          else winner = plAtkTurn ? 'player' : 'ai';
+          specialNote = ' • Рефугиум: победа по редкости!';
+        } else if ((pP && pP.type === 'selection') || (aP && aP.type === 'selection')) {
+          if (pD.rarity < aD.rarity) winner = 'player';
+          else if (aD.rarity < pD.rarity) winner = 'ai';
+          else winner = plAtkTurn ? 'player' : 'ai';
+          specialNote = ' • Отбор: частый вид победил!';
+        } else if ((pP && pP.type === 'head_to_head') || (aP && aP.type === 'head_to_head')) {
+          winner = pAtk > aAtk ? 'player' : (aAtk > pAtk ? 'ai' : (plAtkTurn ? 'player' : 'ai'));
+          specialNote = ' • Лоб в лоб: столкновение Атак!';
+        } else if ((pP && pP.type === 'defense_clash') || (aP && aP.type === 'defense_clash')) {
+          winner = pArm > aArm ? 'player' : (aArm > pArm ? 'ai' : (plAtkTurn ? 'player' : 'ai'));
+          specialNote = ' • Оборона: броня против брони!';
+        } else {
+          winner = plAtkTurn
+            ? (pAtk > aArm ? 'player' : 'ai')
+            : (aAtk > pArm ? 'ai' : 'player');
+        }
 
         const mathSummary = plAtkTurn
           ? `Твоя Атака ${pAtk} vs Броня врага ${aArm}`
           : `Атака врага ${aAtk} vs Твоя Броня ${pArm}`;
-
-        let specialNote = '';
-        if (winner === 'ai' && pP && pP.id === 'p10' && (aD.rarity - pD.rarity >= 3)) {
-          winner = 'player';
-          specialNote = ' • Реванш аутсайдера!';
-        } else if (winner === 'player' && aP && aP.id === 'p10' && (pD.rarity - aD.rarity >= 3)) {
-          winner = 'ai';
-          specialNote = ' • Реванш соперника!';
-        }
-
-        if (!plAtkTurn && pP && pP.id === 'p11' && pArm > aAtk) {
-          winner = 'player';
-          specialNote = ' • Контратака тагомайзером!';
-        }
 
         // Remove dinos from tactics hands
         if (state.mode === 'tactics') {
@@ -1239,17 +1455,20 @@
         let outcomeText = '';
         const sweepClass = winner === 'player' ? 'sweep-player-bita' : 'sweep-ai-bita';
 
+        // Amber handling (p18 - preserve card on defeat)
         if (winner === 'player') {
           state.playerTrophies.push({ card: pD, stolen: false });
-          if (aP && aP.id === 'p9') {
-            outcomeText = `${mathSummary} — Враг спасён янтарём (сгорел)`;
+          if (aP && aP.type === 'amber') {
+            state.aiTrophies.push({ card: aD, stolen: false });
+            outcomeText = `${mathSummary} — Враг спасён янтарём`;
           } else {
             state.playerTrophies.push({ card: aD, stolen: true });
             outcomeText = `${mathSummary} — Обе карты уходят в твою биту!${specialNote}`;
           }
         } else {
           state.aiTrophies.push({ card: aD, stolen: false });
-          if (pP && pP.id === 'p9') {
+          if (pP && pP.type === 'amber') {
+            state.playerTrophies.push({ card: pD, stolen: false });
             outcomeText = `${mathSummary} — Твой динозавр спасён янтарём`;
           } else {
             state.aiTrophies.push({ card: pD, stolen: true });
@@ -1257,11 +1476,29 @@
           }
         }
 
+        // Deextinction (p30): reclaim stolen card!
+        if (pP && pP.type === 'deextinction') {
+          const stolenIdx = state.aiTrophies.map(t => t.stolen).lastIndexOf(true);
+          if (stolenIdx !== -1) {
+            const reclaimed = state.aiTrophies.splice(stolenIdx, 1)[0];
+            state.playerTrophies.push({ card: reclaimed.card, stolen: false });
+            specialNote += ' • Деэкстинкция: карта возвращена!';
+          }
+        }
+        if (aP && aP.type === 'deextinction') {
+          const stolenIdx = state.playerTrophies.map(t => t.stolen).lastIndexOf(true);
+          if (stolenIdx !== -1) {
+            const reclaimed = state.playerTrophies.splice(stolenIdx, 1)[0];
+            state.aiTrophies.push({ card: reclaimed.card, stolen: false });
+            specialNote += ' • Враг вернул карту деэкстинкцией!';
+          }
+        }
+
         showOutcomeBanner(outcomeText, winner, () => {
           const pSlot = document.getElementById('activePlayerCardEl');
           const aSlot = document.getElementById('activeAiCardEl');
-          if (pSlot) pSlot.classList.add(winner === 'ai' && pP && pP.id === 'p9' ? 'sweep-exile-card' : sweepClass);
-          if (aSlot) aSlot.classList.add(winner === 'player' && aP && aP.id === 'p9' ? 'sweep-exile-card' : sweepClass);
+          if (pSlot) pSlot.classList.add(sweepClass);
+          if (aSlot) aSlot.classList.add(sweepClass);
 
           setTimeout(() => {
             state.round += 1;
@@ -1761,7 +1998,7 @@
 
             <!-- Vector Line-Art Dinosaur Illustration from Sheet -->
             <div class="flex-1 w-full flex items-center justify-center py-0.5 min-h-0 overflow-hidden">
-              <img src="${DINO_IMAGES[dino.id]}" alt="${dino.name}"
+              <img src="${DINO_IMAGES[dino.imageId] || DINO_IMAGES[dino.id] || DINO_IMAGES['d1']}" alt="${dino.name}"
                 class="max-h-full max-w-full object-contain filter drop-shadow-[0_1px_1px_rgba(0,0,0,0.12)] pointer-events-none select-none" />
             </div>
 
