@@ -1609,7 +1609,7 @@
         aiSlot.innerHTML = `
           <div id="activeAiCardEl" class="relative flex items-center justify-center ai-slam-in">
             ${renderDinoCard(state.activeAiDino, 'arena-card-size w-24 h-32 sm:w-28 sm:h-36', live.aAtk, live.aArm, !plAtkTurn, plAtkTurn)}
-            <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#111] border border-[#F7F6F2] text-[#F7F6F2] text-[8px] font-black uppercase shadow">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-md bg-[#141414] border border-[#F7F6F2]/40 text-[#F7F6F2] text-[8px] font-black uppercase shadow-lg whitespace-nowrap z-30 pointer-events-none">
               ${aiRoleIcon} ${aiRole} ${aiRoleValue}
             </div>
             ${revealAiProp && state.activeAiProp ? `
@@ -1637,7 +1637,7 @@
         plSlot.innerHTML = `
           <div id="activePlayerCardEl" class="relative flex items-center justify-center slam-in">
             ${renderDinoCard(state.activePlayerDino, 'arena-card-size w-24 h-32 sm:w-28 sm:h-36', live.pAtk, live.pArm, plAtkTurn, !plAtkTurn)}
-            <div class="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#F7F6F2] text-[#141414] border border-[#141414] text-[8px] font-black uppercase shadow">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-md bg-[#F7F6F2] text-[#141414] border border-[#141414] text-[8px] font-black uppercase shadow-lg whitespace-nowrap z-30 pointer-events-none">
               ${plRoleIcon} ${plRole} ${plRoleValue}
             </div>
             ${state.activePlayerProp ? `
@@ -1674,16 +1674,29 @@
           `;
         }
       } else {
-        const isWinning = plAtkTurn ? (live.pAtk > live.aArm) : (live.pAtk <= live.aArm);
+        const isWinning = plAtkTurn ? (live.pAtk > live.aArm) : (live.pArm >= live.aAtk);
         const mathComparison = plAtkTurn
           ? `⚔️ Твоя Атака ${live.pAtk} vs 🛡️ Броня врага ${live.aArm}`
           : `⚔️ Атака врага ${live.aAtk} vs 🛡️ Твоя Броня ${live.pArm}`;
 
+        const diff = plAtkTurn
+          ? (live.pAtk - live.aArm)
+          : (live.pArm - live.aAtk);
+
+        const statusDetail = plAtkTurn
+          ? (isWinning ? `▲ Пробиваешь защиту (+${diff})` : `▼ Не пробито (нужно еще +${Math.abs(diff) + 1} силы)`)
+          : (isWinning ? `▲ Броня держит удар! (+${diff} запас)` : `▼ Броня пробита! (не хватает ${Math.abs(diff)} брони)`);
+
         actionSlot.innerHTML = `
-          <div class="flex flex-col items-center gap-1 w-full">
-            <div class="px-2.5 py-0.5 rounded-full ${isWinning ? 'bg-[#182618] border-green-500/50 text-green-200' : 'bg-[#2a1717] border-red-500/50 text-red-200'} border text-[9.5px] font-black tracking-wide shadow flex items-center gap-1">
-              <span>${mathComparison}</span>
-              <span class="font-bold">${isWinning ? '▲ (ПОБЕДА)' : '▼ (ПОРАЖЕНИЕ)'}</span>
+          <div class="flex flex-col items-center gap-1 w-full max-w-sm px-1">
+            <div class="px-3 py-1 rounded-xl ${isWinning ? 'bg-[#182618] border-green-500/60 text-green-200' : 'bg-[#2a1717] border-red-500/60 text-red-200'} border text-center shadow-lg w-full flex flex-col items-center">
+              <div class="text-[9.5px] font-black tracking-wide flex items-center justify-center gap-1.5">
+                <span>${mathComparison}</span>
+                <span class="font-black">${isWinning ? '• ПОБЕДА' : '• ПОРАЖЕНИЕ'}</span>
+              </div>
+              <div class="text-[7.5px] font-bold opacity-80 mt-0.5">
+                ${statusDetail}
+              </div>
             </div>
             <button onclick="executeClash()"
               class="px-7 py-1.5 rounded-xl bg-[#F7F6F2] hover:bg-white text-[#141414] border-2 border-[#141414] font-black text-xs sm:text-sm tracking-[0.14em] uppercase shadow-[0_8px_24px_rgba(0,0,0,0.85)] active:scale-95 transition">
