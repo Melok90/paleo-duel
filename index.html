@@ -555,6 +555,7 @@
           <div>• <b>Бита:</b> Победитель раунда забирает обе карты себе. Побеждает тот, кто соберет больше трофеев!</div>
           <div>• <b>120 уникальных существ:</b> Хищники, травоядные, водные ящеры, птерозавры, метеориты, древняя ДНК и редкие окаменелости от 1/10 до 10/10!</div>
           <div>• <b>30 карт свойств:</b> Энергия (+10..+75), Сила (+10..+100), Защита (+10..+75), Отступить, Тагомайзер (контратака), Янтарь (спасение карты), Стая, Яд, Иммунитет, Естественный отбор, Рефугиум, Деэкстинкция и др.</div>
+          <div>• <b>Перехват закона боя:</b> Если оба игрока выложили карты изменения условий (Рефугиум, Отбор, Лоб в лоб, Оборона), действует <b>последняя сыгранная карта</b> (ответная карта перебивает предыдущую)!</div>
         </div>
       </div>
 
@@ -888,7 +889,8 @@
       selectedCardUid: null,
       playerRot: '0deg',
       aiRot: '0deg',
-      isRipping: false
+      isRipping: false,
+      propPlayOrder: []
     };
 
     const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -1126,6 +1128,7 @@
       state.activePlayerProp = null;
       state.activeAiProp = null;
       state.selectedCardUid = null;
+      state.propPlayOrder = [];
 
       if (state.mode === 'tactics') {
         const plDinos = state.playerHand.filter(c => c.kind === 'dino');
@@ -1244,12 +1247,14 @@
 
         state.activePlayerProp = card;
         state.selectedCardUid = null;
+        state.propPlayOrder = state.propPlayOrder.filter(x => x !== 'player').concat('player');
         renderTable();
       }
     }
 
     function removeAttachedPlayerProp() {
       state.activePlayerProp = null;
+      state.propPlayOrder = state.propPlayOrder.filter(x => x !== 'player');
       renderTable();
     }
 
@@ -1277,6 +1282,7 @@
         state.playerProps = state.playerProps.filter(p => p.uid !== prop.uid);
         state.activePlayerDino = nextDino;
         state.activePlayerProp = null;
+        state.propPlayOrder = state.propPlayOrder.filter(x => x !== 'player');
         showOutcomeBanner(`✦ Переходное звено: ${pD.name} ушел в биту, вытянут ${nextDino.name}!`, 'player', () => {
           renderTable();
         });
@@ -1285,8 +1291,10 @@
 
       if (state.activePlayerProp && state.activePlayerProp.uid === uid) {
         state.activePlayerProp = null;
+        state.propPlayOrder = state.propPlayOrder.filter(x => x !== 'player');
       } else {
         state.activePlayerProp = prop;
+        state.propPlayOrder = state.propPlayOrder.filter(x => x !== 'player').concat('player');
       }
       renderTable();
     }
@@ -1384,26 +1392,43 @@
         };
       }
 
-      // Check Win Condition Alterations & Collisions
+      // Check Win Condition Alterations & Precedence (Solution 1: "Последняя карта определяющая")
       const WIN_COND_TYPES = ['refugium', 'selection', 'head_to_head', 'defense_clash'];
       const pCond = activePProp && WIN_COND_TYPES.includes(activePProp.type) ? activePProp.type : null;
       const aCond = activeAProp && WIN_COND_TYPES.includes(activeAProp.type) ? activeAProp.type : null;
 
       let collisionNote = '';
-      let isCondCollision = false;
+      let activeCond = null;
 
       if (immunityConflict) {
         collisionNote = '⚡ Обоюдный иммунитет: свойства сгорели!';
       } else if (pCond && aCond && pCond !== aCond) {
-        isCondCollision = true;
-        collisionNote = `⚡ Коллизия: «${activePProp.name}» и «${activeAProp.name}» аннулированы! Схватка по базовым правилам!`;
+        // Solution 1: Last played card takes precedence!
+        let lastPlayer = 'player';
+        if (state.propPlayOrder && state.propPlayOrder.length >= 2) {
+          lastPlayer = state.propPlayOrder[state.propPlayOrder.length - 1];
+        } else {
+          lastPlayer = state.attacker === 'player' ? 'ai' : 'player';
+        }
+
+        if (lastPlayer === 'player') {
+          activeCond = pCond;
+          collisionNote = `🔄 Перехват закона: «${activePProp.name}» перебивает «${activeAProp.name}» (правило последней карты)!`;
+        } else {
+          activeCond = aCond;
+          collisionNote = `🔄 Перехват закона: «${activeAProp.name}» перебивает «${activePProp.name}» (правило последней карты)!`;
+        }
+      } else if (pCond) {
+        activeCond = pCond;
+      } else if (aCond) {
+        activeCond = aCond;
       }
 
       let winner = 'player';
       let ruleText = '';
       let detailText = '';
 
-      if (!isCondCollision && (pCond === 'refugium' || aCond === 'refugium')) {
+      if (activeCond === 'refugium') {
         ruleText = 'Рефугиум (победа по редкости)';
         if (pD.rarity > aD.rarity) {
           winner = 'player';
@@ -1415,7 +1440,7 @@
           winner = plAtkTurn ? 'player' : 'ai';
           detailText = `Равная редкость (${ROMAN[pD.rarity]}) — преимущество атакующего`;
         }
-      } else if (!isCondCollision && (pCond === 'selection' || aCond === 'selection')) {
+      } else if (activeCond === 'selection') {
         ruleText = 'Естественный отбор (победа по массовости)';
         if (pD.rarity < aD.rarity) {
           winner = 'player';
@@ -1427,7 +1452,7 @@
           winner = plAtkTurn ? 'player' : 'ai';
           detailText = 'Равная частота — преимущество атакующего';
         }
-      } else if (!isCondCollision && (pCond === 'head_to_head' || aCond === 'head_to_head')) {
+      } else if (activeCond === 'head_to_head') {
         ruleText = 'Лоб в лоб (сравнение Атак)';
         if (pAtk > aAtk) {
           winner = 'player';
@@ -1439,7 +1464,7 @@
           winner = plAtkTurn ? 'player' : 'ai';
           detailText = `Равная сила Атак (${pAtk}) — преимущество атакующего`;
         }
-      } else if (!isCondCollision && (pCond === 'defense_clash' || aCond === 'defense_clash')) {
+      } else if (activeCond === 'defense_clash') {
         ruleText = 'Оборона (сравнение Брони)';
         if (pArm > aArm) {
           winner = 'player';
