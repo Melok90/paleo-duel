@@ -1213,6 +1213,35 @@
         renderTable();
       } else if (card.kind === 'prop') {
         if (state.phase !== 'reaction') return;
+
+        // Transition link (p23): if current dino is weaker, save to bita and draw next!
+        if (card.type === 'transition') {
+          const plAtkTurn = state.attacker === 'player';
+          const pD = state.activePlayerDino;
+          const aD = state.activeAiDino;
+          const isWeaker = plAtkTurn ? (pD.atk <= aD.arm) : (pD.arm < aD.atk);
+
+          if (!isWeaker) {
+            showOutcomeBanner('Переходное звено можно применить только если ваш динозавр слабее!', 'neutral');
+            return;
+          }
+          const nextDino = state.playerHand.find(c => (c.kind === 'dino' || !c.type) && c.uid !== pD.uid);
+          if (!nextDino) {
+            showOutcomeBanner('В руке нет других динозавров для замены!', 'neutral');
+            return;
+          }
+
+          state.playerTrophies.push({ card: pD, stolen: false });
+          state.playerHand = state.playerHand.filter(c => c.uid !== pD.uid && c.uid !== card.uid);
+          state.activePlayerDino = nextDino;
+          state.activePlayerProp = null;
+          state.selectedCardUid = null;
+          showOutcomeBanner(`✦ Переходное звено: ${pD.name} ушел в биту, в бой вышел ${nextDino.name}!`, 'player', () => {
+            renderTable();
+          });
+          return;
+        }
+
         state.activePlayerProp = card;
         state.selectedCardUid = null;
         renderTable();
@@ -1226,11 +1255,38 @@
 
     function toggleClassicProp(uid) {
       if (state.phase !== 'combat_ready') return;
+      const prop = state.playerProps.find(p => p.uid === uid);
+      if (!prop) return;
+
+      if (prop.type === 'transition') {
+        const plAtkTurn = state.attacker === 'player';
+        const pD = state.activePlayerDino;
+        const aD = state.activeAiDino;
+        const isWeaker = plAtkTurn ? (pD.atk <= aD.arm) : (pD.arm < aD.atk);
+
+        if (!isWeaker) {
+          showOutcomeBanner('Переходное звено можно применить только если ваш динозавр слабее!', 'neutral');
+          return;
+        }
+        if (state.playerDeck.length === 0) {
+          showOutcomeBanner('В колоде больше нет динозавров для замены!', 'neutral');
+          return;
+        }
+        const nextDino = state.playerDeck.shift();
+        state.playerTrophies.push({ card: pD, stolen: false });
+        state.playerProps = state.playerProps.filter(p => p.uid !== prop.uid);
+        state.activePlayerDino = nextDino;
+        state.activePlayerProp = null;
+        showOutcomeBanner(`✦ Переходное звено: ${pD.name} ушел в биту, вытянут ${nextDino.name}!`, 'player', () => {
+          renderTable();
+        });
+        return;
+      }
+
       if (state.activePlayerProp && state.activePlayerProp.uid === uid) {
         state.activePlayerProp = null;
       } else {
-        const prop = state.playerProps.find(p => p.uid === uid);
-        if (prop) state.activePlayerProp = prop;
+        state.activePlayerProp = prop;
       }
       renderTable();
     }
@@ -1238,70 +1294,214 @@
     // -----------------------------------------------------------------------
     // COMBAT STATS & AI REACTION
     // -----------------------------------------------------------------------
-    function computeCombatStats() {
+        // -----------------------------------------------------------------------
+    // UNIFIED COMBAT RESOLUTION & CONFLICT SYSTEM
+    // -----------------------------------------------------------------------
+    function evaluateCombatResolution() {
       const pD = state.activePlayerDino;
       const aD = state.activeAiDino;
-      let pP = state.activePlayerProp;
-      let aP = state.activeAiProp;
+      if (!pD || !aD) return null;
 
-      // Handle Immunity (p22) - cancels opponent's property completely!
-      if (pP && pP.type === 'immunity') aP = null;
-      if (aP && aP.type === 'immunity') pP = null;
+      const pP = state.activePlayerProp;
+      const aP = state.activeAiProp;
+      const plAtkTurn = state.attacker === 'player';
 
-      let pAtk = pD ? pD.atk : 0;
-      let pArm = pD ? pD.arm : 0;
-      let aAtk = aD ? aD.atk : 0;
-      let aArm = aD ? aD.arm : 0;
+      let activePProp = pP;
+      let activeAProp = aP;
+      let immunityConflict = false;
 
-      // Apply Player Property effects
-      if (pD && pP) {
-        if (pP.type === 'stat') {
-          pAtk += pP.atkBonus || 0;
-          pArm += pP.armBonus || 0;
-        } else if (pP.type === 'thagomizer') {
-          pAtk += pArm; // Counterattack: defense becomes attack!
-        } else if (pP.type === 'venom') {
-          if (aD) aArm = Math.floor(aArm * 0.5);
-        } else if (pP.type === 'poisoned') {
-          if (aD) aAtk = Math.floor(aAtk * 0.5);
-        } else if (pP.type === 'flock') {
-          const ally = (state.mode === 'tactics')
-            ? state.playerHand.find(c => c.kind === 'dino' && c.uid !== pD.uid)
-            : state.playerDeck[0];
-          if (ally) pAtk += ally.atk;
-        } else if (pP.type === 'great_battle') {
-          const ally = (state.mode === 'tactics')
-            ? state.playerHand.find(c => c.kind === 'dino' && c.uid !== pD.uid)
-            : state.playerDeck[0];
-          if (ally) { pAtk += ally.atk; pArm += ally.arm; }
+      // 1. Immunity handling
+      if (pP && pP.type === 'immunity' && aP && aP.type === 'immunity') {
+        activePProp = null;
+        activeAProp = null;
+        immunityConflict = true;
+      } else if (pP && pP.type === 'immunity') {
+        activeAProp = null;
+      } else if (aP && aP.type === 'immunity') {
+        activePProp = null;
+      }
+
+      // 2. Base stats & stat mods
+      let pAtk = pD.atk;
+      let pArm = pD.arm;
+      let aAtk = aD.atk;
+      let aArm = aD.arm;
+
+      if (activePProp && activePProp.type === 'stat') {
+        pAtk += activePProp.atkBonus || 0;
+        pArm += activePProp.armBonus || 0;
+      }
+      if (activeAProp && activeAProp.type === 'stat') {
+        aAtk += activeAProp.atkBonus || 0;
+        aArm += activeAProp.armBonus || 0;
+      }
+
+      // Thagomizer (p17): "Очки защиты становятся очками атаки"
+      const pThago = activePProp && activePProp.type === 'thagomizer';
+      const aThago = activeAProp && activeAProp.type === 'thagomizer';
+      if (pThago) pAtk = Math.max(pAtk, pArm);
+      if (aThago) aAtk = Math.max(aAtk, aArm);
+
+      // Venom & Poisoned
+      if (activePProp && activePProp.type === 'venom') aArm = Math.floor(aArm * 0.5);
+      if (activeAProp && activeAProp.type === 'venom') pArm = Math.floor(pArm * 0.5);
+      if (activePProp && activePProp.type === 'poisoned') aAtk = Math.floor(aAtk * 0.5);
+      if (activeAProp && activeAProp.type === 'poisoned') pAtk = Math.floor(pAtk * 0.5);
+
+      // Flock & Great Battle Allies
+      let pAlly = null, aAlly = null;
+      if (activePProp && (activePProp.type === 'flock' || activePProp.type === 'great_battle')) {
+        pAlly = (state.mode === 'tactics')
+          ? state.playerHand.find(c => (c.kind === 'dino' || !c.type) && c.uid !== pD.uid)
+          : state.playerDeck[0];
+        if (pAlly) {
+          pAtk += pAlly.atk;
+          if (activePProp.type === 'great_battle') pArm += pAlly.arm;
+        }
+      }
+      if (activeAProp && (activeAProp.type === 'flock' || activeAProp.type === 'great_battle')) {
+        aAlly = (state.mode === 'tactics')
+          ? state.aiHand.find(c => (c.kind === 'dino' || !c.type) && c.uid !== aD.uid)
+          : state.aiDeck[0];
+        if (aAlly) {
+          aAtk += aAlly.atk;
+          if (activeAProp.type === 'great_battle') aArm += aAlly.arm;
         }
       }
 
-      // Apply AI Property effects
-      if (aD && aP) {
-        if (aP.type === 'stat') {
-          aAtk += aP.atkBonus || 0;
-          aArm += aP.armBonus || 0;
-        } else if (aP.type === 'thagomizer') {
-          aAtk += aArm;
-        } else if (aP.type === 'venom') {
-          if (pD) pArm = Math.floor(pArm * 0.5);
-        } else if (aP.type === 'poisoned') {
-          if (pD) pAtk = Math.floor(pAtk * 0.5);
-        } else if (aP.type === 'flock') {
-          const ally = (state.mode === 'tactics')
-            ? state.aiHand.find(c => c.kind === 'dino' && c.uid !== aD.uid)
-            : state.aiDeck[0];
-          if (ally) aAtk += ally.atk;
-        } else if (aP.type === 'great_battle') {
-          const ally = (state.mode === 'tactics')
-            ? state.aiHand.find(c => c.kind === 'dino' && c.uid !== aD.uid)
-            : state.aiDeck[0];
-          if (ally) { aAtk += ally.atk; aArm += ally.arm; }
+      // Check Retreat (p16)
+      const isRetreat = (activePProp && activePProp.type === 'retreat') || (activeAProp && activeAProp.type === 'retreat');
+      if (isRetreat) {
+        return {
+          pAtk, pArm, aAtk, aArm, pAlly, aAlly,
+          activePProp, activeAProp,
+          isRetreat: true,
+          winner: 'neutral',
+          isWinning: true,
+          ruleText: 'Отступление',
+          detailText: 'Схватка отменена: карты вернутся в свои биты',
+          collisionNote: ''
+        };
+      }
+
+      // Check Win Condition Alterations & Collisions
+      const WIN_COND_TYPES = ['refugium', 'selection', 'head_to_head', 'defense_clash'];
+      const pCond = activePProp && WIN_COND_TYPES.includes(activePProp.type) ? activePProp.type : null;
+      const aCond = activeAProp && WIN_COND_TYPES.includes(activeAProp.type) ? activeAProp.type : null;
+
+      let collisionNote = '';
+      let isCondCollision = false;
+
+      if (immunityConflict) {
+        collisionNote = '⚡ Обоюдный иммунитет: свойства сгорели!';
+      } else if (pCond && aCond && pCond !== aCond) {
+        isCondCollision = true;
+        collisionNote = `⚡ Коллизия: «${activePProp.name}» и «${activeAProp.name}» аннулированы! Схватка по базовым правилам!`;
+      }
+
+      let winner = 'player';
+      let ruleText = '';
+      let detailText = '';
+
+      if (!isCondCollision && (pCond === 'refugium' || aCond === 'refugium')) {
+        ruleText = 'Рефугиум (победа по редкости)';
+        if (pD.rarity > aD.rarity) {
+          winner = 'player';
+          detailText = `Твоя редкость (${ROMAN[pD.rarity]}) выше врага (${ROMAN[aD.rarity]})`;
+        } else if (aD.rarity > pD.rarity) {
+          winner = 'ai';
+          detailText = `Редкость врага (${ROMAN[aD.rarity]}) выше твоей (${ROMAN[pD.rarity]})`;
+        } else {
+          winner = plAtkTurn ? 'player' : 'ai';
+          detailText = `Равная редкость (${ROMAN[pD.rarity]}) — преимущество атакующего`;
+        }
+      } else if (!isCondCollision && (pCond === 'selection' || aCond === 'selection')) {
+        ruleText = 'Естественный отбор (победа по массовости)';
+        if (pD.rarity < aD.rarity) {
+          winner = 'player';
+          detailText = `Твой вид более частый (${ROMAN[pD.rarity]} против ${ROMAN[aD.rarity]})`;
+        } else if (aD.rarity < pD.rarity) {
+          winner = 'ai';
+          detailText = `Вид врага более частый (${ROMAN[aD.rarity]} против ${ROMAN[pD.rarity]})`;
+        } else {
+          winner = plAtkTurn ? 'player' : 'ai';
+          detailText = 'Равная частота — преимущество атакующего';
+        }
+      } else if (!isCondCollision && (pCond === 'head_to_head' || aCond === 'head_to_head')) {
+        ruleText = 'Лоб в лоб (сравнение Атак)';
+        if (pAtk > aAtk) {
+          winner = 'player';
+          detailText = `Твоя Атака (${pAtk}) мощнее Атаки врага (${aAtk})`;
+        } else if (aAtk > pAtk) {
+          winner = 'ai';
+          detailText = `Атака врага (${aAtk}) мощнее твоей (${pAtk})`;
+        } else {
+          winner = plAtkTurn ? 'player' : 'ai';
+          detailText = `Равная сила Атак (${pAtk}) — преимущество атакующего`;
+        }
+      } else if (!isCondCollision && (pCond === 'defense_clash' || aCond === 'defense_clash')) {
+        ruleText = 'Оборона (сравнение Брони)';
+        if (pArm > aArm) {
+          winner = 'player';
+          detailText = `Твоя Броня (${pArm}) крепче Брони врага (${aArm})`;
+        } else if (aArm > pArm) {
+          winner = 'ai';
+          detailText = `Броня врага (${aArm}) крепче твоей (${pArm})`;
+        } else {
+          winner = plAtkTurn ? 'player' : 'ai';
+          detailText = `Равная Броня (${pArm}) — преимущество атакующего`;
+        }
+      } else {
+        // Standard combat or after collision
+        if (plAtkTurn) {
+          if (aThago && (aArm > pAtk || aArm > pArm || aAtk > pAtk)) {
+            winner = 'ai';
+            ruleText = 'Контратака врага (Тагомайзер)';
+            detailText = `Враг отбился броней ${aArm} и сокрушил атаку!`;
+          } else {
+            ruleText = pThago ? `⚔️ Удар хвостом (Тагомайзер) ${pAtk} vs 🛡️ Броня врага ${aArm}` : `⚔️ Твоя Атака ${pAtk} vs 🛡️ Броня врага ${aArm}`;
+            const diff = pAtk - aArm;
+            if (diff > 0) {
+              winner = 'player';
+              detailText = `Пробиваешь защиту врага (+${diff})`;
+            } else {
+              winner = 'ai';
+              detailText = `Броня врага выдержала (не хватает ${Math.abs(diff) + 1} силы)`;
+            }
+          }
+        } else {
+          if (pThago && (pArm > aAtk || pArm > aArm || pAtk > aAtk)) {
+            winner = 'player';
+            ruleText = 'Контратака (Тагомайзер)!';
+            detailText = `Твоя защита (${pArm}) отразила удар и сокрушила врага!`;
+          } else {
+            ruleText = aThago ? `⚔️ Удар хвостом врага (Тагомайзер) ${aAtk} vs 🛡️ Твоя Броня ${pArm}` : `⚔️ Атака врага ${aAtk} vs 🛡️ Твоя Броня ${pArm}`;
+            const diff = pArm - aAtk;
+            if (diff >= 0) {
+              winner = 'player';
+              detailText = `Твоя броня держит удар! (+${diff} запас)`;
+            } else {
+              winner = 'ai';
+              detailText = `Враг пробивает броню (не хватает ${Math.abs(diff)} защиты)`;
+            }
+          }
         }
       }
 
-      return { pAtk, pArm, aAtk, aArm };
+      const isWinning = winner === 'player';
+      return {
+        pAtk, pArm, aAtk, aArm, pAlly, aAlly,
+        activePProp, activeAProp,
+        winner, isWinning,
+        ruleText, detailText,
+        collisionNote, isRetreat: false
+      };
+    }
+
+    function computeCombatStats() {
+      const res = evaluateCombatResolution();
+      if (!res) return { pAtk: 0, pArm: 0, aAtk: 0, aArm: 0 };
+      return { pAtk: res.pAtk, pArm: res.pArm, aAtk: res.aAtk, aArm: res.aArm };
     }
 
     function decideAiProperty() {
@@ -1315,35 +1515,34 @@
       const aiD = state.activeAiDino;
       const plD = state.activePlayerDino;
       const aiAtkTurn = state.attacker === 'ai';
-      const live = computeCombatStats();
 
-      // If player played a strong property and AI has Immunity (p22), counter it!
+      // 1. If player played a strong property, counter with Immunity if available
       if (state.activePlayerProp) {
         const immunity = aiProps.find(p => p.type === 'immunity');
         if (immunity) { state.activeAiProp = immunity; return; }
       }
 
-      const aiLosing = aiAtkTurn ? (live.aAtk <= live.pArm) : (live.pAtk > live.aArm);
+      const baseRes = evaluateCombatResolution();
+      if (!baseRes || baseRes.winner === 'ai') return; // AI already winning!
 
-      if (aiLosing) {
-        for (const prop of aiProps) {
-          if (aiAtkTurn) {
-            if (prop.type === 'stat' && (aiD.atk + prop.atkBonus > live.pArm)) { state.activeAiProp = prop; return; }
-            if (prop.type === 'venom' && (aiD.atk > Math.floor(live.pArm * 0.5))) { state.activeAiProp = prop; return; }
-            if (prop.type === 'thagomizer' && (aiD.atk + aiD.arm > live.pArm)) { state.activeAiProp = prop; return; }
-          } else {
-            if (prop.type === 'stat' && (live.pAtk <= aiD.arm + prop.armBonus)) { state.activeAiProp = prop; return; }
-            if (prop.type === 'poisoned' && (Math.floor(live.pAtk * 0.5) <= aiD.arm)) { state.activeAiProp = prop; return; }
-          }
-          // Special mechanics
-          if (prop.type === 'refugium' && (aiD.rarity > plD.rarity)) { state.activeAiProp = prop; return; }
-          if (prop.type === 'selection' && (aiD.rarity < plD.rarity)) { state.activeAiProp = prop; return; }
-          if (prop.type === 'head_to_head' && (live.aAtk > live.pAtk)) { state.activeAiProp = prop; return; }
-          if (prop.type === 'defense_clash' && (live.aArm > live.pArm)) { state.activeAiProp = prop; return; }
-          if (prop.type === 'deextinction' && state.playerTrophies.some(t => t.stolen)) { state.activeAiProp = prop; return; }
-          if ((prop.type === 'retreat' || prop.type === 'amber') && aiD.rarity >= 6) { state.activeAiProp = prop; return; }
+      // 2. Try each property to find one that turns the loss into a win
+      for (const prop of aiProps) {
+        state.activeAiProp = prop;
+        const testRes = evaluateCombatResolution();
+        if (testRes && testRes.winner === 'ai') {
+          return; // Found winning play!
         }
       }
+
+      // 3. If still losing and dino is valuable, try retreat or amber
+      if (aiD.rarity >= 6) {
+        const retreat = aiProps.find(p => p.type === 'retreat');
+        if (retreat) { state.activeAiProp = retreat; return; }
+        const amber = aiProps.find(p => p.type === 'amber');
+        if (amber) { state.activeAiProp = amber; return; }
+      }
+
+      state.activeAiProp = null;
     }
 
     // -----------------------------------------------------------------------
@@ -1358,11 +1557,10 @@
 
       const pD = state.activePlayerDino;
       const aD = state.activeAiDino;
-      let pP = state.activePlayerProp;
-      let aP = state.activeAiProp;
-      const plAtkTurn = state.attacker === 'player';
+      const pP = state.activePlayerProp;
+      const aP = state.activeAiProp;
 
-      // Remove properties from hands/inventory
+      // Remove played properties from hands/inventory
       if (pP) {
         if (state.mode === 'tactics') state.playerHand = state.playerHand.filter(c => c.uid !== pP.uid);
         else state.playerProps = state.playerProps.filter(p => p.uid !== pP.uid);
@@ -1374,16 +1572,26 @@
 
       renderTable(true);
 
-      const delayBeforeMath = aP ? 600 : 120;
+      const delayBeforeMath = aP ? 650 : 120;
 
       setTimeout(() => {
-        // 1. Retreat (p16): combat is cancelled peacefully!
-        if ((pP && pP.type === 'retreat') || (aP && aP.type === 'retreat')) {
+        const res = evaluateCombatResolution();
+        if (!res) return;
+
+        // 1. Retreat handling (p16)
+        if (res.isRetreat) {
           state.playerTrophies.push({ card: pD, stolen: false });
           state.aiTrophies.push({ card: aD, stolen: false });
+          if (res.pAlly) state.playerTrophies.push({ card: res.pAlly, stolen: false });
+          if (res.aAlly) state.aiTrophies.push({ card: res.aAlly, stolen: false });
           if (state.mode === 'tactics') {
             state.playerHand = state.playerHand.filter(c => c.uid !== pD.uid);
             state.aiHand = state.aiHand.filter(c => c.uid !== aD.uid);
+            if (res.pAlly) state.playerHand = state.playerHand.filter(c => c.uid !== res.pAlly.uid);
+            if (res.aAlly) state.aiHand = state.aiHand.filter(c => c.uid !== res.aAlly.uid);
+          } else {
+            if (res.pAlly) state.playerDeck = state.playerDeck.filter(c => c.uid !== res.pAlly.uid);
+            if (res.aAlly) state.aiDeck = state.aiDeck.filter(c => c.uid !== res.aAlly.uid);
           }
           showOutcomeBanner('Отступление! Карты ушли в свои биты', 'neutral', () => {
             state.round += 1;
@@ -1398,7 +1606,7 @@
         }
 
         // 2. Migration (p25): swap random card between players
-        if ((pP && pP.type === 'migration') || (aP && aP.type === 'migration')) {
+        if ((res.activePProp && res.activePProp.type === 'migration') || (res.activeAProp && res.activeAProp.type === 'migration')) {
           if (state.mode === 'tactics' && state.playerHand.length > 0 && state.aiHand.length > 0) {
             const pIdx = Math.floor(Math.random() * state.playerHand.length);
             const aIdx = Math.floor(Math.random() * state.aiHand.length);
@@ -1414,83 +1622,63 @@
           }
         }
 
-        // 3. Compute stats with properties
-        const { pAtk, pArm, aAtk, aArm } = computeCombatStats();
-        let winner = 'player';
-        let specialNote = '';
-
-        // Check special combat types
-        if ((pP && pP.type === 'refugium') || (aP && aP.type === 'refugium')) {
-          if (pD.rarity > aD.rarity) winner = 'player';
-          else if (aD.rarity > pD.rarity) winner = 'ai';
-          else winner = plAtkTurn ? 'player' : 'ai';
-          specialNote = ' • Рефугиум: победа по редкости!';
-        } else if ((pP && pP.type === 'selection') || (aP && aP.type === 'selection')) {
-          if (pD.rarity < aD.rarity) winner = 'player';
-          else if (aD.rarity < pD.rarity) winner = 'ai';
-          else winner = plAtkTurn ? 'player' : 'ai';
-          specialNote = ' • Отбор: частый вид победил!';
-        } else if ((pP && pP.type === 'head_to_head') || (aP && aP.type === 'head_to_head')) {
-          winner = pAtk > aAtk ? 'player' : (aAtk > pAtk ? 'ai' : (plAtkTurn ? 'player' : 'ai'));
-          specialNote = ' • Лоб в лоб: столкновение Атак!';
-        } else if ((pP && pP.type === 'defense_clash') || (aP && aP.type === 'defense_clash')) {
-          winner = pArm > aArm ? 'player' : (aArm > pArm ? 'ai' : (plAtkTurn ? 'player' : 'ai'));
-          specialNote = ' • Оборона: броня против брони!';
-        } else {
-          winner = plAtkTurn
-            ? (pAtk > aArm ? 'player' : 'ai')
-            : (aAtk > pArm ? 'ai' : 'player');
-        }
-
-        const mathSummary = plAtkTurn
-          ? `Твоя Атака ${pAtk} vs Броня врага ${aArm}`
-          : `Атака врага ${aAtk} vs Твоя Броня ${pArm}`;
-
-        // Remove dinos from tactics hands
+        // 3. Remove primary dinos and any summoned allies
         if (state.mode === 'tactics') {
           state.playerHand = state.playerHand.filter(c => c.uid !== pD.uid);
           state.aiHand = state.aiHand.filter(c => c.uid !== aD.uid);
+          if (res.pAlly) state.playerHand = state.playerHand.filter(c => c.uid !== res.pAlly.uid);
+          if (res.aAlly) state.aiHand = state.aiHand.filter(c => c.uid !== res.aAlly.uid);
+        } else {
+          if (res.pAlly) state.playerDeck = state.playerDeck.filter(c => c.uid !== res.pAlly.uid);
+          if (res.aAlly) state.aiDeck = state.aiDeck.filter(c => c.uid !== res.aAlly.uid);
         }
 
-        let outcomeText = '';
+        const winner = res.winner;
+        let outcomeText = `${res.ruleText} — ${res.detailText}`;
+        if (res.collisionNote) outcomeText = `${res.collisionNote} ${outcomeText}`;
+
         const sweepClass = winner === 'player' ? 'sweep-player-bita' : 'sweep-ai-bita';
 
-        // Amber handling (p18 - preserve card on defeat)
+        // 4. Distribute spoils with Amber (p18)
+        const pCardsToAward = [pD];
+        if (res.pAlly) pCardsToAward.push(res.pAlly);
+
+        const aCardsToAward = [aD];
+        if (res.aAlly) aCardsToAward.push(res.aAlly);
+
         if (winner === 'player') {
-          state.playerTrophies.push({ card: pD, stolen: false });
-          if (aP && aP.type === 'amber') {
-            state.aiTrophies.push({ card: aD, stolen: false });
-            outcomeText = `${mathSummary} — Враг спасён янтарём`;
+          pCardsToAward.forEach(c => state.playerTrophies.push({ card: c, stolen: false }));
+          if (res.activeAProp && res.activeAProp.type === 'amber') {
+            aCardsToAward.forEach(c => state.aiTrophies.push({ card: c, stolen: false }));
+            outcomeText += ' (Враг спасён янтарём)';
           } else {
-            state.playerTrophies.push({ card: aD, stolen: true });
-            outcomeText = `${mathSummary} — Обе карты уходят в твою биту!${specialNote}`;
+            aCardsToAward.forEach(c => state.playerTrophies.push({ card: c, stolen: true }));
           }
         } else {
-          state.aiTrophies.push({ card: aD, stolen: false });
-          if (pP && pP.type === 'amber') {
-            state.playerTrophies.push({ card: pD, stolen: false });
-            outcomeText = `${mathSummary} — Твой динозавр спасён янтарём`;
+          aCardsToAward.forEach(c => state.aiTrophies.push({ card: c, stolen: false }));
+          if (res.activePProp && res.activePProp.type === 'amber') {
+            pCardsToAward.forEach(c => state.playerTrophies.push({ card: c, stolen: false }));
+            outcomeText += ' (Твой динозавр спасён янтарём)';
           } else {
-            state.aiTrophies.push({ card: pD, stolen: true });
-            outcomeText = `${mathSummary} — Карты достаются сопернику${specialNote}`;
+            pCardsToAward.forEach(c => state.aiTrophies.push({ card: c, stolen: true }));
           }
         }
 
-        // Deextinction (p30): reclaim stolen card!
-        if (pP && pP.type === 'deextinction') {
+        // 5. Deextinction (p30): reclaim stolen card
+        if (res.activePProp && res.activePProp.type === 'deextinction') {
           const stolenIdx = state.aiTrophies.map(t => t.stolen).lastIndexOf(true);
           if (stolenIdx !== -1) {
             const reclaimed = state.aiTrophies.splice(stolenIdx, 1)[0];
             state.playerTrophies.push({ card: reclaimed.card, stolen: false });
-            specialNote += ' • Деэкстинкция: карта возвращена!';
+            outcomeText += ' • Деэкстинкция: карта возвращена!';
           }
         }
-        if (aP && aP.type === 'deextinction') {
+        if (res.activeAProp && res.activeAProp.type === 'deextinction') {
           const stolenIdx = state.playerTrophies.map(t => t.stolen).lastIndexOf(true);
           if (stolenIdx !== -1) {
             const reclaimed = state.playerTrophies.splice(stolenIdx, 1)[0];
             state.aiTrophies.push({ card: reclaimed.card, stolen: false });
-            specialNote += ' • Враг вернул карту деэкстинкцией!';
+            outcomeText += ' • Враг вернул карту деэкстинкцией!';
           }
         }
 
@@ -1674,28 +1862,26 @@
           `;
         }
       } else {
-        const isWinning = plAtkTurn ? (live.pAtk > live.aArm) : (live.pArm >= live.aAtk);
-        const mathComparison = plAtkTurn
-          ? `⚔️ Твоя Атака ${live.pAtk} vs 🛡️ Броня врага ${live.aArm}`
-          : `⚔️ Атака врага ${live.aAtk} vs 🛡️ Твоя Броня ${live.pArm}`;
-
-        const diff = plAtkTurn
-          ? (live.pAtk - live.aArm)
-          : (live.pArm - live.aAtk);
-
-        const statusDetail = plAtkTurn
-          ? (isWinning ? `▲ Пробиваешь защиту (+${diff})` : `▼ Не пробито (нужно еще +${Math.abs(diff) + 1} силы)`)
-          : (isWinning ? `▲ Броня держит удар! (+${diff} запас)` : `▼ Броня пробита! (не хватает ${Math.abs(diff)} брони)`);
+        const res = evaluateCombatResolution();
+        const isWinning = res ? res.isWinning : false;
+        const mainTitle = res ? res.ruleText : '';
+        const detailText = res ? res.detailText : '';
+        const collision = (res && res.collisionNote) ? res.collisionNote : '';
 
         actionSlot.innerHTML = `
           <div class="flex flex-col items-center gap-1 w-full max-w-sm px-1">
+            ${collision ? `
+              <div class="px-2.5 py-0.5 rounded-lg bg-amber-950/90 border border-amber-500/70 text-amber-200 text-[8px] font-black text-center shadow mb-0.5">
+                ${collision}
+              </div>
+            ` : ''}
             <div class="px-3 py-1 rounded-xl ${isWinning ? 'bg-[#182618] border-green-500/60 text-green-200' : 'bg-[#2a1717] border-red-500/60 text-red-200'} border text-center shadow-lg w-full flex flex-col items-center">
               <div class="text-[9.5px] font-black tracking-wide flex items-center justify-center gap-1.5">
-                <span>${mathComparison}</span>
+                <span>${mainTitle}</span>
                 <span class="font-black">${isWinning ? '• ПОБЕДА' : '• ПОРАЖЕНИЕ'}</span>
               </div>
               <div class="text-[7.5px] font-bold opacity-80 mt-0.5">
-                ${statusDetail}
+                ${detailText}
               </div>
             </div>
             <button onclick="executeClash()"
