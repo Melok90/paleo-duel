@@ -1546,11 +1546,11 @@
               <div class="booster-tactics-icon" aria-hidden="true"><img src="./assets/reveal/game-mode-glyph.png" alt=""></div>
               <div class="booster-tactics-copy flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-1">
-                  <span class="booster-tactics-title fit-single-line">РЕЖИМ: ТАКТИКА</span>
-                  <span class="booster-tactics-pill fit-single-line">ВЫБОР ИЗ РУКИ</span>
+                  <span class="booster-tactics-title fit-single-line">РЕЖИМ: КЛАССИКА</span>
+                  <span class="booster-tactics-pill fit-single-line">ИЗ СТОПКИ</span>
                 </div>
                 <p class="booster-tactics-description">
-                  Ты сам выбираешь, какого динозавра выставить в каждом раунде.
+                  Динозавры лежат закрытой стопкой на столе и вскрываются вслепую (как сотки/фишки). Свойства остаются в твоей руке!
                 </p>
               </div>
             </div>
@@ -1627,8 +1627,7 @@
       </div>
 
       <!-- Center: Mode Badge -->
-      <div id="tableModeBadge" class="hud-mode-badge">
-        <span>Режим: Тактика</span>
+      <div id="tableModeBadge" class="hud-mode-badge"><span>Режим: Классика</span>
       </div>
 
       <!-- Right: Opponent Bita and Rules -->
@@ -2116,7 +2115,7 @@
     // GAME STATE
     // -----------------------------------------------------------------------
     let state = {
-      mode: 'tactics',
+      mode: 'classic',
       round: 1,
       totalRounds: 6,
       attacker: 'player', // 'player' | 'ai'
@@ -2160,10 +2159,10 @@
     // THE GAME USES TACTICS MODE ONLY
     // -----------------------------------------------------------------------
     function selectStartupMode() {
-      state.mode = 'tactics';
+      state.mode = 'classic';
       const dest = document.getElementById('revealDinoDestination');
       const btnText = document.getElementById('confirmHaulBtnText');
-      if (dest) dest.textContent = 'Динозавры попадут в руку — выбирай карту для каждого раунда.';
+      if (dest) dest.textContent = 'Динозавры формируют закрытую стопку на столе — бой вслепую. Свойства в твоей руке!';
       if (btnText) btnText.textContent = 'В БОЙ';
     }
 
@@ -3456,7 +3455,7 @@
 
       // 1. Update Mode Badge
       const modeBadge = document.getElementById('tableModeBadge');
-      modeBadge.textContent = 'Режим: Тактика';
+      modeBadge.textContent = 'Режим: Классика';
       modeBadge.className = 'hud-mode-badge';
 
       // 2. Trophy counts
