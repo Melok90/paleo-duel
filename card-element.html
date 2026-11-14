@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Пять образцов карточек — Paleo Duel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --paper:#fbfaf6; --ink:#111; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; padding:24px; background:#050505; color:var(--paper); font-family:'Roboto Condensed',sans-serif; }
+    main { width:min(100%,900px); margin:0 auto; }
+    .eyebrow { margin:0 0 6px; color:#c5c5c1; font-size:11px; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+    h1 { margin:0; color:var(--paper); font-family:'Roboto Condensed',sans-serif; font-size:clamp(28px,5vw,48px); line-height:1; text-transform:uppercase; font-style:italic; }
+    .intro { max-width:720px; margin:10px 0 22px; color:#bdbdb9; font-size:14px; line-height:1.5; }
+    .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; align-items:start; }
+    .card { min-width:0; aspect-ratio:.555; padding:10px; border:0; border-radius:26px; background:var(--paper); color:var(--ink); }
+    .frame { height:100%; padding:10px; display:flex; flex-direction:column; gap:8px; border:5px solid var(--ink); border-radius:16px; background:var(--paper); overflow:hidden; }
+    .heading { flex:none; min-height:0; display:flex; flex-direction:column; padding:0 1px 7px; }
+    .name { margin:0; font-family:'Roboto Condensed',sans-serif; font-size:clamp(17px,2.15vw,29px); font-weight:800; font-style:italic; line-height:1.08; letter-spacing:-.025em; text-transform:uppercase; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .latin { margin:2px 0 0; font-family:'Roboto Condensed',sans-serif; font-size:clamp(14px,1.75vw,23px); font-style:italic; font-weight:500; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .identity-rule { height:3px; flex:none; margin-top:6px; background:var(--ink); }
+    .art { flex:1; min-height:0; display:grid; place-items:center; overflow:hidden; border:0; border-radius:0; background:var(--art); }
+    .art img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; }
+    .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .stat { min-width:0; padding:5px 3px 6px; text-align:center; border:5px solid var(--ink); border-radius:10px; background:var(--ink); color:var(--paper); }
+    .stat.armor { background:var(--paper); color:var(--ink); }
+    .label { font-family:'Roboto Condensed',sans-serif; font-size:clamp(13px,1.6vw,21px); font-weight:800; letter-spacing:.02em; }
+    .value { margin-top:1px; font-family:'Roboto Condensed',sans-serif; font-size:clamp(23px,2.45vw,32px); line-height:1.15; font-style:italic; font-weight:800; }
+    .caption { margin:18px 0 0; color:#9c9c9c; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+    @media (max-width:900px) { .name { font-size:clamp(17px,3.3vw,25px); } .latin { font-size:clamp(14px,2.8vw,21px); } }
+    @media (max-width:580px) { body { padding:17px 12px 24px; } .cards { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; } .card { padding:7px; border-radius:22px; } .frame { padding:7px; gap:6px; border-width:4px; border-radius:13px; } .name { font-size:clamp(15px,4.8vw,23px); } .latin { font-size:clamp(12px,3.6vw,17px); } .stats { gap:5px; } .stat { border-width:4px; } .label { font-size:clamp(11px,3.2vw,16px); } .value { font-size:clamp(20px,5.4vw,27px); } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Paleo Duel · единый макет</p>
+    <h1>Пять образцов карт</h1>
+    <p class="intro">У всех карточек одинаковая рамка и расположение данных. Меняются название, иллюстрация, атака и броня. Эти пять рисунков временно повторяются в коллекции из 122 карт.</p>
+    <section class="cards" aria-label="Пять примеров карточек">
+      <article class="card" aria-label="Майязавр">
+        <div class="frame">
+          <header class="heading"><h2 class="name">Майязавр</h2><p class="latin">Maiasaura peeblesorum</p><div class="identity-rule"></div></header>
+          <div class="art" style="--art:#c6eb08"><img src="dinosaur_illustrations_5_images/card_03_repenomamus.png" alt="Временная иллюстрация майязавра"></div>
+          <div class="stats"><div class="stat"><div class="label">АТАКА</div><div class="value">120</div></div><div class="stat armor"><div class="label">БРОНЯ</div><div class="value">52</div></div></div>
+        </div>
+      </article>
+      <article class="card" aria-label="Компсогнат">
+        <div class="frame">
+          <header class="heading"><h2 class="name">Компсогнат</h2><p class="latin">Compsognathus longipes</p><div class="identity-rule"></div></header>
+          <div class="art" style="--art:#ff9200"><img src="dinosaur_illustrations_5_images/card_02_rhamphorhynchus.png" alt="Временная иллюстрация рамфоринха"></div>
+          <div class="stats"><div class="stat"><div class="label">АТАКА</div><div class="value">14</div></div><div class="stat armor"><div class="label">БРОНЯ</div><div class="value">12</div></div></div>
+        </div>
+      </article>
+      <article class="card" aria-label="Ляонингозавр">
+        <div class="frame">
+          <header class="heading"><h2 class="name">Ляонингозавр</h2><p class="latin">Liaoningosaurus paradoxus</p><div class="identity-rule"></div></header>
+          <div class="art" style="--art:#c6eb08"><img src="dinosaur_illustrations_5_images/card_03_repenomamus.png" alt="Временная иллюстрация репеномама"></div>
+          <div class="stats"><div class="stat"><div class="label">АТАКА</div><div class="value">32</div></div><div class="stat armor"><div class="label">БРОНЯ</div><div class="value">48</div></div></div>
+        </div>
+      </article>
+      <article class="card" aria-label="Пситтакозавр">
+        <div class="frame">
+          <header class="heading"><h2 class="name">Пситтакозавр</h2><p class="latin">Psittacosaurus mongoliensis</p><div class="identity-rule"></div></header>
+          <div class="art" style="--art:#f51f25"><img src="dinosaur_illustrations_5_images/card_04_deinosuchus.png" alt="Временная иллюстрация дейнозуха"></div>
+          <div class="stats"><div class="stat"><div class="label">АТАКА</div><div class="value">14</div></div><div class="stat armor"><div class="label">БРОНЯ</div><div class="value">18</div></div></div>
+        </div>
+      </article>
+      <article class="card" aria-label="Сибирский пситтакозавр">
+        <div class="frame">
+          <header class="heading"><h2 class="name">Сибирский пситтакозавр</h2><p class="latin">Psittacosaurus sibiricus</p><div class="identity-rule"></div></header>
+          <div class="art" style="--art:#13d2bd"><img src="dinosaur_illustrations_5_images/card_05_diplodocus.png" alt="Временная иллюстрация диплодока"></div>
+          <div class="stats"><div class="stat"><div class="label">АТАКА</div><div class="value">16</div></div><div class="stat armor"><div class="label">БРОНЯ</div><div class="value">20</div></div></div>
+        </div>
+      </article>
+    </section>
+    <p class="caption">Одинаковая структура · пять повторяющихся иллюстраций · данные из CSV</p>
+  </main>
+  <script>
+    (() => {
+      const fitTitles = () => {
+        document.querySelectorAll('.name').forEach(title => {
+          const baseSize = Number(title.dataset.fitBaseSize) || parseFloat(getComputedStyle(title).fontSize);
+          title.dataset.fitBaseSize = String(baseSize);
+          let size = baseSize;
+          const minSize = Math.max(8, baseSize * 0.55);
+          title.style.setProperty('font-size', `${size}px`, 'important');
+          while (title.clientWidth > 0 && title.scrollWidth > title.clientWidth + 1 && size > minSize) {
+            size = Math.max(minSize, size - 0.5);
+            title.style.setProperty('font-size', `${size}px`, 'important');
+          }
+        });
+      };
+      let frame = 0;
+      const scheduleFit = () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(fitTitles);
+      };
+      window.addEventListener('resize', scheduleFit, { passive:true });
+      if (document.fonts?.ready) document.fonts.ready.then(scheduleFit);
+      scheduleFit();
+    })();
+  </script>
+</body>
+</html>
