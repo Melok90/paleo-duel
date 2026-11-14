@@ -445,19 +445,21 @@
     }
 
     .booster-paper-card {
-      width: min(100%, 540px);
+      width: min(92vw, 420px);
+      max-width: 100%;
       height: auto;
       max-height: 100%;
       min-height: 0;
-      padding: 12px;
-      box-sizing:border-box;
+      padding: 10px;
+      box-sizing: border-box;
       color: #F7F6F2;
       background: #050505;
       border: 4px solid #F7F6F2;
-      outline:0;
-      border-radius: 42px;
-      box-shadow: none;
-      animation:none;
+      outline: 0;
+      border-radius: 36px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.85);
+      animation: none;
+      position: relative;
     }
     .booster-paper-card::before {
       content:'';
@@ -473,23 +475,26 @@
       background:radial-gradient(ellipse at 50% 46%, #41413f 0%, #30302e 72%, #252524 100%);
     }
     .booster-paper-flap {
-      min-height: 58px;
-      flex: 0 0 58px;
+      min-height: 50px;
+      flex: 0 0 50px;
       background: #050505;
       color: #FAF9F6;
       border: 0;
       border-radius: 0;
-      white-space:nowrap;
+      white-space: nowrap;
     }
     .booster-paper-flap > span {
-      display:flex;
-      width:100%;
-      min-width:0;
-      align-items:center;
-      justify-content:center;
-      gap:12px;
-      font:700 italic clamp(14px, 4vw, 22px)/1 'Roboto Condensed',sans-serif;
-      letter-spacing:.04em;
+      display: flex;
+      width: 100%;
+      min-width: 0;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(16px, 4.4vw, 18px);
+      line-height: 1.1;
+      letter-spacing: .03em;
     }
     .booster-scissors {
       color:#F7F6F2;
@@ -519,29 +524,32 @@
     .booster-hero-stamp {
       display: grid;
       place-items: center;
-      width: clamp(132px, 39vw, 224px);
+      width: clamp(120px, 32vw, 175px);
       height: auto;
       aspect-ratio: 422 / 384;
-      flex:0 0 auto;
+      flex: 0 0 auto;
       padding: 0;
       border: 0;
       outline: 0;
       border-radius: 0;
       background: transparent;
       box-shadow: none;
-      overflow:hidden;
+      overflow: hidden;
+      margin: 0 auto;
     }
     .booster-hero-stamp img { width:100%; height:100%; object-fit:contain; filter:none; }
-    .booster-hero-group { margin-top:16px; }
+    .booster-hero-group {
+      margin-top: 6px;
+    }
     .booster-tactics-panel {
       width: 100%;
       border: 2px solid #F7F6F2;
-      border-radius: 24px;
-      padding: 12px 14px;
+      border-radius: 20px;
+      padding: 10px 12px;
       color: #FAF9F6;
       background: #050505;
-      box-shadow:none;
-      margin: 18px 0 0 !important;
+      box-shadow: none;
+      margin: 10px 0 0 !important;
     }
     .booster-tactics-panel > div {
       display:flex;
@@ -549,33 +557,38 @@
       gap:14px;
     }
     .booster-label-pill {
-      width:min(82%, 430px) !important;
+      width: min(86%, 380px) !important;
       border: 3px solid #F7F6F2;
       border-radius: 999px;
-      padding: 7px 14px;
-      color:#F7F6F2;
-      font: 700 italic clamp(15px, 4.2vw, 24px)/1.1 'Roboto Condensed', sans-serif;
-      font-style: italic;
-      letter-spacing:.035em;
-      white-space:nowrap;
-      margin-top:2px;
+      padding: 6px 14px;
+      color: #F7F6F2;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(17px, 4.6vw, 19.5px);
+      line-height: 1.1;
+      letter-spacing: .03em;
+      white-space: nowrap;
+      margin-top: 2px;
     }
     .booster-display-title {
-      color:#F7F6F2;
-      font:900 italic clamp(36px, 13vw, 54px)/1.08 'Roboto Condensed', sans-serif;
-      font-style:italic;
-      letter-spacing:-.035em;
-      white-space:nowrap;
-      text-shadow:none;
-      margin-top:12px;
+      color: #F7F6F2;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: clamp(36px, 10.2vw, 42px);
+      line-height: 1.05;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      text-shadow: none;
+      margin-top: 6px;
     }
     .booster-swish {
-      height:4px;
-      width:72%;
-      background:#F7F6F2;
-      position:relative;
-      margin-top:8px !important;
-      margin-bottom:6px !important;
+      height: 3px;
+      width: 70%;
+      background: #F7F6F2;
+      position: relative;
+      margin-top: 5px !important;
+      margin-bottom: 5px !important;
     }
     .booster-swish::before,.booster-swish::after {
       content:'';
@@ -592,11 +605,14 @@
       background-image:url('./assets/reveal/title-bolt-right.svg');
     }
     .booster-subtitle {
-      color:#F7F6F2;
-      font:700 italic clamp(6.5px, 2.65vw, 12.5px)/1.1 'Roboto Condensed', sans-serif;
-      font-style:italic;
-      letter-spacing:0;
-      margin:0;
+      color: #F7F6F2;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.2;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      margin: 0;
     }
     .booster-tactics-icon {
       width:56px;
@@ -612,66 +628,225 @@
     .booster-tactics-icon img { width:100%;height:100%;object-fit:contain; }
     .booster-tactics-copy { border-left:2px solid #F7F6F2;padding-left:14px; }
     .booster-tactics-title {
-      min-width:0;
-      flex:1 1 auto;
-      color:#F7F6F2;
-      font:700 italic clamp(16px, 4.1vw, 23px)/1 'Roboto Condensed',sans-serif;
+      min-width: 0;
+      flex: 1 1 auto;
+      color: #F7F6F2;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(17px, 4.6vw, 19px);
+      line-height: 1.1;
+      letter-spacing: .02em;
     }
     .booster-tactics-pill {
-      flex:0 0 auto;
-      border-radius:999px;
-      padding:6px 10px;
-      background:#F7F6F2;
-      color:#111;
-      font:800 italic clamp(8px, 2vw, 11px)/1 'Roboto Condensed',sans-serif;
-      white-space:nowrap;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #F7F6F2;
+      color: #111;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 12.5px;
+      line-height: 1;
+      white-space: nowrap;
+      letter-spacing: .02em;
     }
     .booster-tactics-description {
-      margin:5px 0 0;
-      color:#F7F6F2;
-      font:500 clamp(11px, 2.65vw, 15px)/1.2 'Roboto Condensed',sans-serif;
-      white-space:normal;
+      margin: 4px 0 0;
+      color: #cfcec9;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.35;
+      white-space: normal;
     }
     .booster-action-primary {
-      border:4px solid #F7F6F2;
-      border-radius:999px;
-      background:#F7F6F2;
-      color:#111;
-      box-shadow:inset 0 0 0 2px #111;
-      min-height:68px;
-      font:700 italic clamp(20px, 5vw, 30px)/1.1 'Roboto Condensed', sans-serif;
-      font-style:italic;
-      letter-spacing:.045em;
+      border: 3.5px solid #F7F6F2;
+      border-radius: 999px;
+      background: #F7F6F2;
+      color: #111;
+      min-height: 58px;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: clamp(20.5px, 5.4vw, 22.5px);
+      line-height: 1.1;
+      letter-spacing: .04em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .booster-actions {
-      display:flex;
-      flex-direction:column;
-      flex:0 0 auto;
-      margin-top:16px !important;
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      margin-top: 12px !important;
+      width: 100%;
     }
     @media (max-height: 740px) {
-      .booster-paper-flap { min-height:48px; flex-basis:48px; }
+      .booster-paper-flap {
+      min-height: 50px;
+      flex: 0 0 50px;
+      background: #050505;
+      color: #FAF9F6;
+      border: 0;
+      border-radius: 0;
+      white-space: nowrap;
+    }
       .booster-inner-frame { padding-bottom:0; }
-      .booster-hero-stamp { width:clamp(110px, 31vw, 172px); height:auto; }
-      .booster-hero-group { margin-top:9px; }
-      .booster-display-title { margin-top:7px; }
-      .booster-swish { margin-top:6px !important; margin-bottom:4px !important; }
-      .booster-tactics-panel { padding:9px 11px; }
+      .booster-hero-stamp {
+      display: grid;
+      place-items: center;
+      width: clamp(120px, 32vw, 175px);
+      height: auto;
+      aspect-ratio: 422 / 384;
+      flex: 0 0 auto;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+      .booster-hero-group {
+      margin-top: 6px;
+    }
+      .booster-display-title {
+      color: #F7F6F2;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: clamp(36px, 10.2vw, 42px);
+      line-height: 1.05;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      text-shadow: none;
+      margin-top: 6px;
+    }
+      .booster-swish {
+      height: 3px;
+      width: 70%;
+      background: #F7F6F2;
+      position: relative;
+      margin-top: 5px !important;
+      margin-bottom: 5px !important;
+    }
+      .booster-tactics-panel {
+      width: 100%;
+      border: 2px solid #F7F6F2;
+      border-radius: 20px;
+      padding: 10px 12px;
+      color: #FAF9F6;
+      background: #050505;
+      box-shadow: none;
+      margin: 10px 0 0 !important;
+    }
       .booster-tactics-icon { width:46px; height:56px; flex-basis:46px; }
-      .booster-actions { margin-top:10px !important; gap:8px !important; }
-      .booster-action-primary { min-height:56px; }
+      .booster-actions {
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      margin-top: 12px !important;
+      width: 100%;
+    }
+      .booster-action-primary {
+      border: 3.5px solid #F7F6F2;
+      border-radius: 999px;
+      background: #F7F6F2;
+      color: #111;
+      min-height: 58px;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: clamp(20.5px, 5.4vw, 22.5px);
+      line-height: 1.1;
+      letter-spacing: .04em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     }
     @media (max-width: 370px) {
-      .booster-paper-card { padding:9px; border-radius:34px; }
-      .booster-paper-flap { min-height:46px; flex-basis:46px; }
-      .booster-label-pill { width:84% !important; padding:6px 8px; }
-      .booster-hero-group { margin-top:8px; }
-      .booster-hero-stamp { width:clamp(105px, 38vw, 142px); height:auto; }
-      .booster-tactics-panel { padding:8px; border-radius:18px; }
+      .booster-paper-card {
+      width: min(92vw, 420px);
+      max-width: 100%;
+      height: auto;
+      max-height: 100%;
+      min-height: 0;
+      padding: 10px;
+      box-sizing: border-box;
+      color: #F7F6F2;
+      background: #050505;
+      border: 4px solid #F7F6F2;
+      outline: 0;
+      border-radius: 36px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.85);
+      animation: none;
+      position: relative;
+    }
+      .booster-paper-flap {
+      min-height: 50px;
+      flex: 0 0 50px;
+      background: #050505;
+      color: #FAF9F6;
+      border: 0;
+      border-radius: 0;
+      white-space: nowrap;
+    }
+      .booster-label-pill {
+      width: min(86%, 380px) !important;
+      border: 3px solid #F7F6F2;
+      border-radius: 999px;
+      padding: 6px 14px;
+      color: #F7F6F2;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(17px, 4.6vw, 19.5px);
+      line-height: 1.1;
+      letter-spacing: .03em;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+      .booster-hero-group {
+      margin-top: 6px;
+    }
+      .booster-hero-stamp {
+      display: grid;
+      place-items: center;
+      width: clamp(120px, 32vw, 175px);
+      height: auto;
+      aspect-ratio: 422 / 384;
+      flex: 0 0 auto;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+      .booster-tactics-panel {
+      width: 100%;
+      border: 2px solid #F7F6F2;
+      border-radius: 20px;
+      padding: 10px 12px;
+      color: #FAF9F6;
+      background: #050505;
+      box-shadow: none;
+      margin: 10px 0 0 !important;
+    }
       .booster-tactics-panel > div { gap:8px; }
       .booster-tactics-icon { width:40px; height:50px; flex-basis:40px; }
       .booster-tactics-copy { padding-left:9px; }
-      .booster-actions { margin-top:8px !important; }
+      .booster-actions {
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      margin-top: 12px !important;
+      width: 100%;
+    }
     }
     }
 
@@ -1322,9 +1497,9 @@
     <!-- Top Header: Shelf & Rules -->
     <div class="w-full max-w-sm flex items-center justify-between mb-2 px-1 z-10 shrink-0">
       <button onclick="openShelfModal()"
-        class="px-3 py-1.5 rounded-full bg-[#1c1c1b] border-2 border-[#F7F6F2] text-[#F7F6F2] text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg hover:bg-[#282826] active:scale-95 transition">
+        class="px-4 py-2 min-h-[44px] rounded-full bg-[#1c1c1b] border-2 border-[#F7F6F2] text-[#F7F6F2] text-[15px] font-black uppercase tracking-wider flex items-center gap-2 shadow-lg hover:bg-[#282826] active:scale-95 transition font-['Roboto_Condensed']">
         <span>📚 МОЯ ПОЛОЧКА:</span>
-        <span id="shelfBadgeTop" class="bg-[#F7F6F2] text-[#141414] px-1.5 py-0.5 rounded text-[10px] font-black">0</span>
+        <span id="shelfBadgeTop" class="bg-[#F7F6F2] text-[#141414] px-2 py-0.5 rounded-md text-[15px] font-black leading-none">0</span>
       </button>
       <button onclick="toggleRulesModal(true)" title="Правила игры"
         class="hud-help !w-9 !h-9 text-lg active:scale-90 transition">
@@ -1386,16 +1561,7 @@
               class="booster-action-primary w-full py-2.5 text-center uppercase active:scale-95 transition">
               <span class="fit-single-line">⚡ БЫСТРЫЙ БУСТЕР (6x6)</span>
             </button>
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="event.stopPropagation(); openBooster(2)"
-                class="py-2 px-1 rounded-xl bg-[#222220] border border-[#F7F6F2]/40 text-[#F7F6F2] text-[10px] sm:text-[11px] font-black uppercase text-center active:scale-95 transition hover:bg-[#2c2c28]">
-                🔥 ДВОЙНОЙ (12x12)
-              </button>
-              <button onclick="event.stopPropagation(); openShelfModal()"
-                class="py-2 px-1 rounded-xl bg-[#222220] border border-[#F7F6F2]/40 text-[#F7F6F2] text-[10px] sm:text-[11px] font-black uppercase text-center active:scale-95 transition hover:bg-[#2c2c28]">
-                🛡️ СВОЙ ОТРЯД
-              </button>
-            </div>
+
           </div>
         </div>
       </div>
@@ -2461,9 +2627,6 @@
       `).join('');
 
       const propsGrid = document.getElementById('revealPropsGrid');
-      const props = state.mode === 'tactics'
-        ? state.playerHand.filter(c => c.kind === 'prop')
-        : state.playerProps;
 
       propsGrid.innerHTML = props.map(prop => {
         const propGlyph = /энерг|сила|молни/i.test(prop.name)
