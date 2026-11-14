@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="typography.css">
   <style>
     :root {
       --sat: env(safe-area-inset-top, 0px);
@@ -492,9 +493,10 @@
       gap: 10px;
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 700;
-      font-size: clamp(16px, 4.4vw, 18px);
-      line-height: 1.1;
-      letter-spacing: .03em;
+      font-style: italic;
+      font-size: var(--font-booster-instruction, 16.5px);
+      line-height: 1.2;
+      letter-spacing: .02em;
     }
     .booster-scissors {
       color:#F7F6F2;
@@ -543,13 +545,13 @@
     }
     .booster-tactics-panel {
       width: 100%;
-      border: 2px solid #F7F6F2;
-      border-radius: 20px;
+      border: 2.5px solid #F7F6F2;
+      border-radius: 16px;
       padding: 10px 12px;
       color: #FAF9F6;
       background: #050505;
       box-shadow: none;
-      margin: 10px 0 0 !important;
+      margin: 8px 0 0 !important;
     }
     .booster-tactics-panel > div {
       display:flex;
@@ -557,30 +559,32 @@
       gap:14px;
     }
     .booster-label-pill {
-      width: min(86%, 380px) !important;
-      border: 3px solid #F7F6F2;
+      width: min(86%, 340px) !important;
+      border: 2.6px solid #F7F6F2;
       border-radius: 999px;
-      padding: 6px 14px;
+      padding: 5px 16px;
       color: #F7F6F2;
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 700;
-      font-size: clamp(17px, 4.6vw, 19.5px);
+      font-style: italic;
+      font-size: var(--font-booster-header, 17.5px);
       line-height: 1.1;
-      letter-spacing: .03em;
+      letter-spacing: .02em;
       white-space: nowrap;
       margin-top: 2px;
     }
     .booster-display-title {
       color: #F7F6F2;
-      font-family: 'Oswald', sans-serif;
-      font-weight: 700;
-      font-size: clamp(36px, 10.2vw, 42px);
-      line-height: 1.05;
-      letter-spacing: .01em;
+      font-family: 'Oswald', 'Roboto Condensed', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: var(--font-booster-title, 38px);
+      line-height: 1.08;
+      letter-spacing: -.01em;
       text-transform: uppercase;
       white-space: nowrap;
       text-shadow: none;
-      margin-top: 6px;
+      margin-top: 4px;
     }
     .booster-swish {
       height: 3px;
@@ -608,7 +612,8 @@
       color: #F7F6F2;
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 700;
-      font-size: 13px;
+      font-style: italic;
+      font-size: var(--font-booster-subtitle, 15.5px);
       line-height: 1.2;
       letter-spacing: .02em;
       text-transform: uppercase;
@@ -633,47 +638,64 @@
       color: #F7F6F2;
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 700;
-      font-size: clamp(17px, 4.6vw, 19px);
+      font-style: italic;
+      font-size: var(--font-booster-header, 17.5px);
       line-height: 1.1;
       letter-spacing: .02em;
     }
     .booster-tactics-pill {
       flex: 0 0 auto;
-      border-radius: 999px;
-      padding: 4px 8px;
-      background: #F7F6F2;
-      color: #111;
+      border-radius: 6px;
+      padding: 3px 8px;
+      background: #f6f4ea;
+      color: #000;
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 700;
-      font-size: 12.5px;
+      font-style: italic;
+      font-size: var(--font-booster-badge, 12px);
       line-height: 1;
       white-space: nowrap;
       letter-spacing: .02em;
     }
     .booster-tactics-description {
       margin: 4px 0 0;
-      color: #cfcec9;
+      color: #F7F6F2;
       font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      line-height: 1.35;
+      font-weight: 500;
+      font-size: var(--font-booster-desc, 16px);
+      line-height: 1.4;
       white-space: normal;
     }
+    .booster-action-frame {
+      border: 2.2px solid #ffffff;
+      border-radius: 26px;
+      padding: 3px;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+      transition: transform 0.15s ease;
+    }
+    .booster-action-frame:active {
+      transform: scale(0.97);
+    }
     .booster-action-primary {
-      border: 3.5px solid #F7F6F2;
-      border-radius: 999px;
-      background: #F7F6F2;
-      color: #111;
-      min-height: 58px;
-      font-family: 'Oswald', sans-serif;
-      font-weight: 700;
-      font-size: clamp(20.5px, 5.4vw, 22.5px);
+      border: 0;
+      border-radius: 9999px;
+      background: #f6f4ea;
+      color: #000000;
+      min-height: 44px;
+      font-family: 'Oswald', 'Roboto Condensed', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: var(--font-booster-cta, 25.5px);
       line-height: 1.1;
-      letter-spacing: .04em;
+      letter-spacing: .02em;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
     }
     .booster-actions {
       display: flex;
@@ -714,15 +736,16 @@
     }
       .booster-display-title {
       color: #F7F6F2;
-      font-family: 'Oswald', sans-serif;
-      font-weight: 700;
-      font-size: clamp(36px, 10.2vw, 42px);
-      line-height: 1.05;
-      letter-spacing: .01em;
+      font-family: 'Oswald', 'Roboto Condensed', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: var(--font-booster-title, 38px);
+      line-height: 1.08;
+      letter-spacing: -.01em;
       text-transform: uppercase;
       white-space: nowrap;
       text-shadow: none;
-      margin-top: 6px;
+      margin-top: 4px;
     }
       .booster-swish {
       height: 3px;
@@ -734,13 +757,13 @@
     }
       .booster-tactics-panel {
       width: 100%;
-      border: 2px solid #F7F6F2;
-      border-radius: 20px;
+      border: 2.5px solid #F7F6F2;
+      border-radius: 16px;
       padding: 10px 12px;
       color: #FAF9F6;
       background: #050505;
       box-shadow: none;
-      margin: 10px 0 0 !important;
+      margin: 8px 0 0 !important;
     }
       .booster-tactics-icon { width:46px; height:56px; flex-basis:46px; }
       .booster-actions {
@@ -750,21 +773,36 @@
       margin-top: 12px !important;
       width: 100%;
     }
-      .booster-action-primary {
-      border: 3.5px solid #F7F6F2;
-      border-radius: 999px;
-      background: #F7F6F2;
-      color: #111;
-      min-height: 58px;
-      font-family: 'Oswald', sans-serif;
-      font-weight: 700;
-      font-size: clamp(20.5px, 5.4vw, 22.5px);
+      .booster-action-frame {
+      border: 2.2px solid #ffffff;
+      border-radius: 26px;
+      padding: 3px;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+      transition: transform 0.15s ease;
+    }
+    .booster-action-frame:active {
+      transform: scale(0.97);
+    }
+    .booster-action-primary {
+      border: 0;
+      border-radius: 9999px;
+      background: #f6f4ea;
+      color: #000000;
+      min-height: 44px;
+      font-family: 'Oswald', 'Roboto Condensed', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: var(--font-booster-cta, 25.5px);
       line-height: 1.1;
-      letter-spacing: .04em;
+      letter-spacing: .02em;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
     }
     }
     @media (max-width: 370px) {
@@ -795,16 +833,17 @@
       white-space: nowrap;
     }
       .booster-label-pill {
-      width: min(86%, 380px) !important;
-      border: 3px solid #F7F6F2;
+      width: min(86%, 340px) !important;
+      border: 2.6px solid #F7F6F2;
       border-radius: 999px;
-      padding: 6px 14px;
+      padding: 5px 16px;
       color: #F7F6F2;
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 700;
-      font-size: clamp(17px, 4.6vw, 19.5px);
+      font-style: italic;
+      font-size: var(--font-booster-header, 17.5px);
       line-height: 1.1;
-      letter-spacing: .03em;
+      letter-spacing: .02em;
       white-space: nowrap;
       margin-top: 2px;
     }
@@ -829,13 +868,13 @@
     }
       .booster-tactics-panel {
       width: 100%;
-      border: 2px solid #F7F6F2;
-      border-radius: 20px;
+      border: 2.5px solid #F7F6F2;
+      border-radius: 16px;
       padding: 10px 12px;
       color: #FAF9F6;
       background: #050505;
       box-shadow: none;
-      margin: 10px 0 0 !important;
+      margin: 8px 0 0 !important;
     }
       .booster-tactics-panel > div { gap:8px; }
       .booster-tactics-icon { width:40px; height:50px; flex-basis:40px; }
@@ -1556,12 +1595,12 @@
             </div>
           </div>
 
-          <div class="booster-actions w-full flex flex-col gap-2">
-            <button onclick="event.stopPropagation(); openBooster(1)"
-              class="booster-action-primary w-full py-2.5 text-center uppercase active:scale-95 transition">
-              <span class="fit-single-line">⚡ БЫСТРЫЙ БУСТЕР (6x6)</span>
-            </button>
-
+                    <div class="booster-actions w-full flex flex-col gap-2">
+            <div class="booster-action-frame" onclick="event.stopPropagation(); openBooster(1)">
+              <button class="booster-action-primary w-full py-2 text-center uppercase">
+                <span class="fit-single-line">ВСКРЫТЬ БУСТЕР</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
