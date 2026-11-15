@@ -3850,23 +3850,11 @@
         // Action banner above hand
         let actionBannerHtml = '';
         if (selectedCard) {
-          if (selectedCard.kind === 'prop') {
-            actionBannerHtml = `
-              <div class="px-3 py-1 rounded-full bg-[#1c1c1b] border-2 border-[#F7F6F2] text-[9.5px] text-[#F7F6F2] font-semibold flex items-center justify-between gap-2 shadow-2xl w-full max-w-md mx-auto mb-1 animate-pulse">
-                <span class="truncate"><b>${selectedCard.name}:</b> ${selectedCard.desc}</span>
-                <button onclick="playCardFromHand('${selectedCard.uid}')"
-                  class="shrink-0 px-2.5 py-0.5 rounded bg-[#F7F6F2] text-[#141414] font-black text-[9px] uppercase tracking-wider">
-                  Сыграть ▲
-                </button>
-              </div>
-            `;
-          } else {
-            actionBannerHtml = `
-              <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/70 font-bold mb-1 pointer-events-none">
-                Нажми повторно или смахни вверх, чтобы выставить
-              </div>
-            `;
-          }
+          actionBannerHtml = `
+            <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/70 font-bold mb-1 pointer-events-none">
+              Нажми повторно или смахни вверх, чтобы выставить
+            </div>
+          `;
         } else {
           actionBannerHtml = `
             <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/50 font-bold mb-1 pointer-events-none">
@@ -4084,23 +4072,11 @@
       if (banner) {
         const selectedCard = state.playerHand.find(c => c.uid === newUid);
         if (selectedCard) {
-          if (selectedCard.kind === 'prop') {
-            banner.innerHTML = `
-              <div class="px-3 py-1 rounded-full bg-[#1c1c1b] border-2 border-[#F7F6F2] text-[9.5px] text-[#F7F6F2] font-semibold flex items-center justify-between gap-2 shadow-2xl w-full max-w-md mx-auto mb-1 animate-pulse">
-                <span class="truncate"><b>${selectedCard.name}:</b> ${selectedCard.desc}</span>
-                <button onclick="playCardFromHand('${selectedCard.uid}')"
-                  class="shrink-0 px-2.5 py-0.5 rounded bg-[#F7F6F2] text-[#141414] font-black text-[9px] uppercase tracking-wider">
-                  Сыграть ▲
-                </button>
-              </div>
-            `;
-          } else {
-            banner.innerHTML = `
-              <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/70 font-bold mb-1 pointer-events-none">
-                Нажми повторно или смахни вверх, чтобы выставить
-              </div>
-            `;
-          }
+          banner.innerHTML = `
+            <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/70 font-bold mb-1 pointer-events-none">
+              Нажми повторно или смахни вверх, чтобы выставить
+            </div>
+          `;
         } else {
           banner.innerHTML = `
             <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/50 font-bold mb-1 pointer-events-none">
