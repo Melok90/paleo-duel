@@ -165,6 +165,45 @@
       cursor: pointer;
       flex-shrink: 0;
     }
+    .hud-menu-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      min-width: 210px;
+      background: #191918;
+      border: 2px solid #F7F6F2;
+      border-radius: 14px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.85);
+      padding: 6px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hud-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: #F7F6F2;
+      font: 700 13px/1.2 'Roboto Condensed', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      background: #232322;
+      border: 1px solid rgba(247,246,242,0.15);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+    .hud-menu-item:active {
+      transform: scale(0.97);
+      background: #323230;
+    }
+    .arena-field.arena-theme-black {
+      background: #000000 !important;
+      background-image: none !important;
+    }
     .battle-status-row { min-height: 40px; gap:8px; }
     .battle-turn-badge {
       flex:0 1 auto;
@@ -1847,10 +1886,28 @@
           </div>
         </div>
 
-        <button onclick="toggleRulesModal(true)" title="Правила"
-          class="hud-help active:scale-90 transition">
-          ?
-        </button>
+        <!-- Settings Menu -->
+        <div class="relative">
+          <button id="tableSettingsBtn" onclick="toggleTableSettingsMenu(event)" title="Меню стола"
+            class="hud-help active:scale-90 transition">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="6" x2="20" y2="6"></line>
+              <line x1="4" y1="12" x2="20" y2="12"></line>
+              <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+          </button>
+
+          <div id="tableSettingsDropdown" class="hud-menu-dropdown hidden" onclick="event.stopPropagation()">
+            <button onclick="handleMenuAction('rules')" class="hud-menu-item">
+              <span>📖</span>
+              <span>Справка</span>
+            </button>
+            <button onclick="handleMenuAction('toggle_bg')" class="hud-menu-item">
+              <span>🎨</span>
+              <span id="toggleBgText">Сменить фон стола</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2357,8 +2414,58 @@
     const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
     const randAngle = () => (Math.random() * 4 - 2).toFixed(1) + 'deg';
 
+    let arenaTheme = localStorage.getItem('paleo_arena_theme') || 'art'; // 'art' | 'black'
+
     function toggleRulesModal(show) {
       document.getElementById('rulesModal').classList.toggle('hidden', !show);
+    }
+
+    function toggleTableSettingsMenu(e) {
+      if (e) e.stopPropagation();
+      const dd = document.getElementById('tableSettingsDropdown');
+      if (dd) {
+        dd.classList.toggle('hidden');
+        updateSettingsMenuLabels();
+      }
+    }
+
+    function closeTableSettingsMenu() {
+      const dd = document.getElementById('tableSettingsDropdown');
+      if (dd && !dd.classList.contains('hidden')) {
+        dd.classList.add('hidden');
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#tableSettingsDropdown') && !e.target.closest('#tableSettingsBtn')) {
+        closeTableSettingsMenu();
+      }
+    });
+
+    function updateSettingsMenuLabels() {
+      const label = document.getElementById('toggleBgText');
+      if (label) {
+        label.textContent = arenaTheme === 'black' ? 'Фон: Иллюстрация' : 'Фон: Черный цвет';
+      }
+    }
+
+    function handleMenuAction(action) {
+      closeTableSettingsMenu();
+      if (action === 'rules') {
+        toggleRulesModal(true);
+      } else if (action === 'toggle_bg') {
+        arenaTheme = (arenaTheme === 'black') ? 'art' : 'black';
+        localStorage.setItem('paleo_arena_theme', arenaTheme);
+        applyArenaTheme();
+      }
+    }
+
+    function applyArenaTheme() {
+      const arena = document.getElementById('centerTableZone');
+      if (arena) {
+        arena.classList.toggle('arena-theme-black', arenaTheme === 'black');
+      }
+      updateSettingsMenuLabels();
     }
 
     // -----------------------------------------------------------------------
@@ -3665,6 +3772,7 @@
       if (arenaField) {
         arenaField.style.setProperty('--arena-field-art', `url("${ARENA_FIELD_BACKGROUND_URL}")`);
         arenaField.classList.toggle('combat-resolving', state.phase === 'resolving');
+        arenaField.classList.toggle('arena-theme-black', arenaTheme === 'black');
       }
 
       // 1. Update Mode Badge
