@@ -1525,12 +1525,12 @@
       max-width: 100%;
       overflow-x: clip;
       overflow-y: visible;
-      padding-top: 14px;
-      margin-top: 0;
+      padding-top: 48px;
+      margin-top: -24px;
     }
     .hand-scroll-wrapper.has-scroll {
       overflow-x: auto;
-      overflow-y: visible;
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
@@ -1541,7 +1541,7 @@
     .hand-scroll-wrapper.has-scroll::after {
       content: '';
       position: absolute;
-      top: 14px;
+      top: 32px;
       bottom: 0;
       width: 24px;
       pointer-events: none;
@@ -1609,14 +1609,14 @@
 
     /* Selected Card State for Tactics Mode Hand: focused, readable, non-intrusive */
     .card-selected {
-      transform: translateY(-26px) scale(1.22) rotate(0deg) !important;
+      transform: translateY(-16px) scale(1.15) rotate(0deg) !important;
       transform-origin: center bottom !important;
       z-index: 80 !important;
       opacity: 1 !important;
       box-shadow:
-        0 20px 40px -6px rgba(0, 0, 0, 0.98),
-        0 0 0 2.5px #F7F6F2,
-        0 0 28px rgba(255, 255, 255, 0.45) !important;
+        0 16px 36px -6px rgba(0, 0, 0, 0.98),
+        0 0 0 2px #F7F6F2,
+        0 0 22px rgba(255, 255, 255, 0.45) !important;
     }
 
     .card-selected .stat-box {
@@ -4069,6 +4069,16 @@
         let isDragging = false;
         let didMove = false;
         let startTime = 0;
+        let ghostEl = null;
+
+        const removeGhost = () => {
+          if (ghostEl) {
+            ghostEl.remove();
+            ghostEl = null;
+          }
+          const existing = document.getElementById('fanCardDragGhost');
+          if (existing) existing.remove();
+        };
 
         const canThrowNow = () =>
           (state.phase === 'pick_dino' && card.kind === 'dino') ||
@@ -4081,11 +4091,10 @@
           startTime = Date.now();
           isDragging = true;
           didMove = false;
+          removeGhost();
 
           activeDragState = { el, uid, startX, startY, card };
           el.style.transition = 'none';
-          el.style.zIndex = '70';
-          el.style.opacity = '1';
         };
 
         const onPointerMove = (e) => {
@@ -4099,8 +4108,9 @@
             if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.3) {
               isDragging = false;
               activeDragState = null;
+              removeGhost();
+              el.style.opacity = '';
               el.style.transition = '';
-              el.style.zIndex = '';
               return;
             }
             if (Math.hypot(dx, dy) > 8) didMove = true;
@@ -4110,14 +4120,26 @@
           if (e.cancelable) e.preventDefault();
 
           if (!canThrowNow()) {
-            el.style.transform = `translateY(${Math.max(-18, Math.min(0, dy))}px) scale(1.05)`;
+            el.style.transform = `translateY(${Math.max(-14, Math.min(0, dy))}px) scale(1.03)`;
             return;
           }
 
+          if (!ghostEl) {
+            const rect = el.getBoundingClientRect();
+            ghostEl = document.createElement('div');
+            ghostEl.id = 'fanCardDragGhost';
+            ghostEl.style.cssText = `position:fixed; left:${rect.left}px; top:${rect.top}px; width:${rect.width}px; height:${rect.height}px; pointer-events:none; z-index:9999; margin:0; transition:none; will-change:transform;`;
+            ghostEl.innerHTML = el.innerHTML;
+            ghostEl.className = el.className;
+            ghostEl.classList.remove('hand-draggable', 'card-selected');
+            ghostEl.classList.add('shadow-2xl');
+            document.body.appendChild(ghostEl);
+            el.style.opacity = '0.25';
+          }
+
           const tilt = (dx * 0.05).toFixed(1);
-          // Float 42px above finger so thumb does not cover stats, scale 1.46x
-          el.style.transform = `translate(${dx}px, ${dy - 42}px) scale(1.46) rotate(${tilt}deg)`;
-          el.style.zIndex = '95';
+          // Float 42px above finger so thumb does not cover stats, scale 1.42x
+          ghostEl.style.transform = `translate(${dx}px, ${dy - 42}px) scale(1.42) rotate(${tilt}deg)`;
 
           if (dy < -40) dropZone.classList.add('drop-active');
           else dropZone.classList.remove('drop-active');
@@ -4128,6 +4150,8 @@
           isDragging = false;
           activeDragState = null;
           dropZone.classList.remove('drop-active');
+          removeGhost();
+          el.style.opacity = '';
           el.style.transition = '';
 
           const pt = e.changedTouches ? e.changedTouches[0] : e;
@@ -4171,6 +4195,9 @@
         const cUid = cardEl.getAttribute('data-uid');
         if (cUid === newUid) {
           cardEl.classList.add('card-selected');
+          try {
+            cardEl.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+          } catch(e) {}
         } else {
           cardEl.classList.remove('card-selected');
         }
