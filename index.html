@@ -224,24 +224,38 @@
     #centerTableZone { flex:1 1 auto; }
 
     .arena-card-size {
-      width:min(115px, 31.2vw, 15.57vh) !important;
-      height:min(133px, 18vh) !important;
+      width: clamp(92px, 12.2vh, 108px) !important;
+      aspect-ratio: 0.62 !important;
+      height: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .arena-card-size .dino-inner-frame {
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .arena-card-size .dino-art-panel {
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      height: auto !important;
     }
     .arena-empty-slot {
-      box-sizing:border-box;
-      width:min(115px, 31.2vw, 15.57vh);
-      height:min(133px, 18vh);
-      border:1.8px dashed #f7f6f2;
-      border-radius:14px;
-      background:rgba(12,13,13,.94);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:7px;
-      padding:8px;
-      text-align:center;
-      text-transform:uppercase;
+      box-sizing: border-box;
+      width: clamp(92px, 12.2vh, 108px);
+      aspect-ratio: 0.62;
+      border: 1.8px dashed #f7f6f2;
+      border-radius: 14px;
+      background: rgba(12, 13, 13, 0.94);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px;
+      text-align: center;
+      text-transform: uppercase;
     }
     .arena-slot-title {
       color:#f7f6f2;
@@ -406,15 +420,26 @@
       gap:5px;
     }
     .combat-result-action {
-      margin-top:0;
-      padding:5px 16px;
-      border:2px solid #101110;
-      border-radius:999px;
-      background:#f7f6f2;
-      color:#101110;
-      font:900 11px/1 'Roboto Condensed',sans-serif;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      width: min(190px, 50vw);
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      border: 2px solid #ffffff;
+      border-radius: 9999px;
+      background: #0d0e0d;
+      color: #ffffff;
+      font: 900 18px/1 'Roboto Condensed', sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .combat-result-action:active {
+      transform: scale(0.96);
+      background: #1f201f;
     }
     #aiTableSlot, #playerTableSlot { display:flex; align-items:center; justify-content:center; }
 
@@ -1090,15 +1115,81 @@
       gap:10px;
       padding:0 6px;
     }
-    .reveal-dino-grid > div { height:auto; min-height:0; }
-    #revealDinosGrid .dino-paper-card {
+    .reveal-dino-grid > div,
+    #inspectorCardsGrid > div,
+    #endWonGrid > div {
+      height:auto;
+      min-height:0;
+    }
+    #shelfCardsGrid {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 10px 8px !important;
+      align-items: start !important;
+      padding: 12px 8px !important;
+      flex: 1 1 0% !important;
+      min-height: 0 !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #F7F6F2 rgba(255, 255, 255, 0.1);
+    }
+    #shelfCardsGrid::-webkit-scrollbar {
+      width: 6px;
+    }
+    #shelfCardsGrid::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+    }
+    #shelfCardsGrid::-webkit-scrollbar-thumb {
+      background: #F7F6F2;
+      border-radius: 4px;
+    }
+    .shelf-card-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 0.62;
+      display: block;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .shelf-card-wrapper .dino-paper-card {
+      width: 100% !important;
+      height: 100% !important;
+      aspect-ratio: 0.62 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      border: 0;
+      box-shadow: none;
+    }
+    .shelf-card-wrapper .dino-inner-frame {
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .shelf-card-wrapper .dino-art-panel {
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      height: auto !important;
+    }
+    #revealDinosGrid .dino-paper-card,
+    #inspectorCardsGrid .dino-paper-card,
+    #endWonGrid .dino-paper-card {
       height:auto !important;
       min-height:0;
       aspect-ratio:.62;
       border:0;
       box-shadow:none;
     }
-    #revealDinosGrid .dino-art-panel { min-height:0; }
+    #revealDinosGrid .dino-art-panel,
+    #inspectorCardsGrid .dino-art-panel,
+    #endWonGrid .dino-art-panel {
+      min-height:0;
+    }
     .reveal-prop-grid {
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -1242,6 +1333,7 @@
     /* Bright screen-printed dinosaur card */
     .dino-paper-card {
       container-type:inline-size;
+      aspect-ratio:0.62;
       background-color:#fff;
       color: #111111;
       font-family: 'Roboto Condensed', sans-serif;
@@ -1585,11 +1677,11 @@
               <div class="booster-tactics-icon" aria-hidden="true"><img src="./assets/reveal/game-mode-glyph.png" alt=""></div>
               <div class="booster-tactics-copy flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-1">
-                  <span class="booster-tactics-title fit-single-line">РЕЖИМ: КЛАССИКА</span>
-                  <span class="booster-tactics-pill fit-single-line">ИЗ СТОПКИ</span>
+                  <span class="booster-tactics-title fit-single-line">РЕЖИМ: ТАКТИКА</span>
+                  <span class="booster-tactics-pill fit-single-line">ИЗ РУКИ</span>
                 </div>
                 <p class="booster-tactics-description">
-                  Динозавры лежат закрытой стопкой на столе и вскрываются вслепую (как сотки/фишки). Свойства остаются в твоей руке!
+                  Динозавры и свойства находятся в твоей руке. Выбирай карты и планируй ход с умом!
                 </p>
               </div>
             </div>
@@ -1666,7 +1758,7 @@
       </div>
 
       <!-- Center: Mode Badge -->
-      <div id="tableModeBadge" class="hud-mode-badge"><span>Режим: Классика</span>
+      <div id="tableModeBadge" class="hud-mode-badge"><span>РЕЖИМ: ТАКТИКА</span>
       </div>
 
       <!-- Right: Opponent Bita and Rules -->
@@ -1753,8 +1845,8 @@
 
       <div class="flex-1 overflow-y-auto space-y-2.5 text-xs text-[#cfcec9] leading-relaxed pr-1">
         <div class="p-2 rounded-lg bg-[#222220] border border-[#F7F6F2]/20">
-          <div class="font-black text-[#F7F6F2] text-[11px] uppercase mb-0.5">🃏 Режим «Тактика»</div>
-          <div>Все динозавры открыты в твоей руке. Ты <b>сам выбираешь</b> кого выставить в раунд, оценивая силу атаки и защиты против карт врага.</div>
+          <div class="font-black text-[#F7F6F2] text-[11px] uppercase mb-0.5">🃏 Режим «Классика»</div>
+          <div>Динозавры лежат закрытой стопкой на столе и вскрываются вслепую (как сотки/фишки). Свойства остаются в твоей руке и разыгрываются в бою!</div>
         </div>
 
         <div class="p-2 rounded-lg bg-[#1f1f1d] border border-[#F7F6F2]/20 space-y-1 text-[10.5px]">
@@ -1806,7 +1898,7 @@
   <!-- VIEW 6: SHELF / COLLECTION MODAL                                      -->
   <!-- ===================================================================== -->
   <div id="shelfModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-2 sm:p-4">
-    <div class="w-full max-w-2xl bg-[#161615] border-2 border-[#F7F6F2] rounded-2xl flex flex-col text-[#F7F6F2] shadow-2xl max-h-[94dvh] overflow-hidden">
+    <div class="w-full max-w-2xl h-[92dvh] max-h-[92dvh] bg-[#161615] border-2 border-[#F7F6F2] rounded-2xl flex flex-col text-[#F7F6F2] shadow-2xl overflow-hidden">
       <!-- Header -->
       <div class="flex items-center justify-between border-b border-[#F7F6F2]/30 px-3 sm:px-4 py-2.5 shrink-0 bg-[#1c1c1b]">
         <div class="flex items-center gap-2">
@@ -1848,13 +1940,13 @@
       </div>
 
       <!-- Info bar: Vault vs Squad rule -->
-      <div class="px-3 py-1 bg-[#1a1a19] text-[9.5px] text-[#cfcec9] border-b border-[#F7F6F2]/10 flex items-center justify-between">
+      <div class="px-3 py-1 bg-[#1a1a19] text-[9.5px] text-[#cfcec9] border-b border-[#F7F6F2]/10 flex items-center justify-between shrink-0">
         <span>💡 Кликни на карту, чтобы отправить в <b>Отряд</b> ⚔️ или спрятать в <b>Сейф</b> 🔒</span>
         <span class="text-[8.5px] opacity-70">Карты в сейфе в бою не рискуют!</span>
       </div>
 
       <!-- Cards Grid -->
-      <div id="shelfCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3 overflow-y-auto flex-1 min-h-[220px]">
+      <div id="shelfCardsGrid" class="overflow-y-auto flex-1 min-h-0">
         <!-- Dynamically rendered -->
       </div>
 
@@ -2154,7 +2246,7 @@
     // GAME STATE
     // -----------------------------------------------------------------------
     let state = {
-      mode: 'classic',
+      mode: 'tactics',
       round: 1,
       totalRounds: 6,
       attacker: 'player', // 'player' | 'ai'
@@ -2195,13 +2287,13 @@
     }
 
     // -----------------------------------------------------------------------
-    // THE GAME USES TACTICS MODE ONLY
+    // THE GAME USES TACTICS MODE
     // -----------------------------------------------------------------------
     function selectStartupMode() {
-      state.mode = 'classic';
+      state.mode = 'tactics';
       const dest = document.getElementById('revealDinoDestination');
       const btnText = document.getElementById('confirmHaulBtnText');
-      if (dest) dest.textContent = 'Динозавры формируют закрытую стопку на столе — бой вслепую. Свойства в твоей руке!';
+      if (dest) dest.textContent = 'Динозавры и свойства находятся в твоей руке. Выбирай карты и планируй ход с умом!';
       if (btnText) btnText.textContent = 'В БОЙ';
     }
 
@@ -2214,23 +2306,31 @@
 
     function getShelfCards() {
       const raw = localStorage.getItem(SHELF_STORAGE_KEY);
-      if (!raw) {
-        // Initial welcome collection (6 starter dinos from 1 pack, all active in squad)
-        const starter = generateBoosterCards(1, 'sh_init').dinos.map(d => ({
+      let savedMap = new Map();
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            parsed.forEach(c => {
+              if (c.id) savedMap.set(c.id, c);
+              if (c.uid) savedMap.set(c.uid, c);
+            });
+          }
+        } catch (e) {}
+      }
+
+      // Guarantee that all 122 dinosaurs from ALL_DINOSAURS are present on the shelf
+      return ALL_DINOSAURS.map((d, index) => {
+        const saved = savedMap.get(d.id) || savedMap.get('sh_' + d.id);
+        return {
           ...d,
-          inSquad: true,
-          obtainedAt: Date.now(),
-          isTrophy: false
-        }));
-        saveShelfCards(starter);
-        return starter;
-      }
-      try {
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        return [];
-      }
+          kind: 'dino',
+          uid: 'sh_' + d.id,
+          inSquad: saved !== undefined ? !!saved.inSquad : (index < 6),
+          isTrophy: saved !== undefined ? !!saved.isTrophy : false,
+          obtainedAt: saved?.obtainedAt || Date.now()
+        };
+      });
     }
 
     function saveShelfCards(cards) {
@@ -2426,13 +2526,13 @@
         const isSelected = !!c.inSquad;
         return `
           <div onclick="toggleCardInSquad('${c.uid}')"
-            class="relative cursor-pointer transition-all duration-200 select-none group ${isSelected ? 'ring-2 ring-[#F7F6F2] scale-[1.01] shadow-2xl' : 'opacity-70 hover:opacity-100'}">
+            class="shelf-card-wrapper ${isSelected ? 'ring-2 ring-[#F7F6F2] scale-[1.01] shadow-2xl rounded-xl' : 'opacity-65 hover:opacity-95'}">
             <!-- Squad status badge -->
-            <div class="absolute top-1 left-1 z-20 px-2 py-0.5 rounded text-[7.5px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md ${isSelected ? 'bg-[#F7F6F2] text-[#141414]' : 'bg-[#121212]/90 text-[#cfcec9] border border-[#F7F6F2]/30'}">
+            <div class="absolute -top-2 left-1/2 -translate-x-1/2 z-20 px-2 py-0.5 rounded text-[7.5px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md whitespace-nowrap ${isSelected ? 'bg-[#F7F6F2] text-[#141414]' : 'bg-[#181816] text-[#cfcec9] border border-[#F7F6F2]/30'}">
               <span>${isSelected ? '⚔️ В ОТРЯДЕ' : '🔒 В СЕЙФЕ'}</span>
             </div>
             ${c.isTrophy ? '<div class="absolute top-1 right-1 z-20 px-1.5 py-0.5 rounded text-[6.5px] font-black uppercase bg-[#ffdd00] text-[#111] shadow">ТРОФЕЙ</div>' : ''}
-            ${renderDinoCard(c, 'w-full h-32 sm:h-36', c.atk, c.arm)}
+            ${renderDinoCard(c, 'w-full h-full', c.atk, c.arm)}
           </div>
         `;
       }).join('');
@@ -2660,7 +2760,7 @@
 
       dinosGrid.innerHTML = dinos.map(card => `
         <div class="relative">
-          ${renderDinoCard(card, 'w-full h-30 sm:h-34', card.atk, card.arm)}
+          ${renderDinoCard(card, 'w-full', card.atk, card.arm)}
         </div>
       `).join('');
 
@@ -3464,7 +3564,7 @@
       }
       if (combatResult) {
         slot.innerHTML = renderCombatResultBanner(combatResult);
-        if (onDone) setTimeout(onDone, 1600);
+        if (onDone) setTimeout(onDone, 2200);
         return;
       }
       const toneStyle = tone === 'player'
@@ -3494,7 +3594,7 @@
 
       // 1. Update Mode Badge
       const modeBadge = document.getElementById('tableModeBadge');
-      modeBadge.textContent = 'Режим: Классика';
+      modeBadge.textContent = isTac ? 'РЕЖИМ: ТАКТИКА' : 'РЕЖИМ: КЛАССИКА';
       modeBadge.className = 'hud-mode-badge';
 
       // 2. Trophy counts
@@ -3558,10 +3658,7 @@
 
         aiSlot.innerHTML = `
           <div id="activeAiCardEl" class="relative flex items-center justify-center ai-slam-in">
-            ${renderDinoCard(state.activeAiDino, 'arena-card-size w-24 h-32 sm:w-28 sm:h-36', live.aAtk, live.aArm, !plAtkTurn, plAtkTurn)}
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-md bg-[#141414] border border-[#F7F6F2]/40 text-[#F7F6F2] text-[8px] font-black uppercase shadow-lg whitespace-nowrap z-30 pointer-events-none">
-              ${aiRoleIcon} ${aiRole} ${aiRoleValue}
-            </div>
+            ${renderDinoCard(state.activeAiDino, 'arena-card-size', live.aAtk, live.aArm, !plAtkTurn, plAtkTurn)}
             ${revealAiProp && state.activeAiProp ? `
               <div class="absolute inset-0 pointer-events-none ai-prop-overlay-land z-20">
                 ${renderPropCardMini(state.activeAiProp)}
@@ -3581,16 +3678,9 @@
       // Player Active Card
       const plSlot = document.getElementById('playerTableSlot');
       if (state.activePlayerDino) {
-        const plRole = plAtkTurn ? 'АТАКА' : 'ОБОРОНА';
-        const plRoleValue = plAtkTurn ? live.pAtk : live.pArm;
-        const plRoleIcon = plAtkTurn ? '⚔️' : '🛡️';
-
         plSlot.innerHTML = `
           <div id="activePlayerCardEl" class="relative flex items-center justify-center slam-in">
-            ${renderDinoCard(state.activePlayerDino, 'arena-card-size w-24 h-32 sm:w-28 sm:h-36', live.pAtk, live.pArm, plAtkTurn, !plAtkTurn)}
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-md bg-[#F7F6F2] text-[#141414] border border-[#141414] text-[8px] font-black uppercase shadow-lg whitespace-nowrap z-30 pointer-events-none">
-              ${plRoleIcon} ${plRole} ${plRoleValue}
-            </div>
+            ${renderDinoCard(state.activePlayerDino, 'arena-card-size', live.pAtk, live.pArm, plAtkTurn, !plAtkTurn)}
             ${state.activePlayerProp ? `
               <div onclick="removeAttachedPlayerProp()" title="Нажми, чтобы снять свойство"
                 class="cursor-pointer absolute inset-0 prop-overlay-land z-20">
@@ -3624,7 +3714,7 @@
           `;
         }
       } else {
-        actionSlot.innerHTML = `<button onclick="executeClash()" class="combat-result-action">В бой</button>`;
+        actionSlot.innerHTML = `<button onclick="executeClash()" class="combat-result-action">В БОЙ</button>`;
       }
 
       // 7. Arena Bottom Row (Trophy & Deck)
@@ -4014,7 +4104,7 @@
         grid.innerHTML = cards.map(c => `
           <div class="relative">
             ${c.isStolen ? '<span class="absolute -top-1.5 right-1 z-10 px-1 py-[1px] bg-[#141414] border border-[#F7F6F2] text-[#F7F6F2] text-[6.5px] font-black uppercase shadow">ТРОФЕЙ</span>' : ''}
-            ${renderDinoCard(c, 'w-full h-30 sm:h-34', c.atk, c.arm)}
+            ${renderDinoCard(c, 'w-full', c.atk, c.arm)}
           </div>
         `).join('');
       }
@@ -4122,7 +4212,7 @@
         grid.innerHTML = state.playerTrophies.map(item => `
           <div class="relative">
             ${item.stolen ? '<span class="absolute -top-1.5 right-1 z-10 px-1 py-[1px] bg-[#141414] border border-[#F7F6F2] text-[#F7F6F2] text-[6.5px] font-black uppercase shadow">ТРОФЕЙ</span>' : ''}
-            ${renderDinoCard(item.card, 'w-full h-28 sm:h-32', item.card.atk, item.card.arm)}
+            ${renderDinoCard(item.card, 'w-full', item.card.atk, item.card.arm)}
           </div>
         `).join('');
       }
