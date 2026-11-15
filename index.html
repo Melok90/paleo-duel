@@ -60,30 +60,31 @@
         0 0 0 1px rgba(247, 246, 242, 0.2);
     }
 
-    /* Battle HUD, matching the new screen-printed card language */
     .battle-hud {
-      min-height: 52px;
-      display: grid;
-      grid-template-columns: minmax(84px, 1fr) auto minmax(0, 1fr);
-      gap: clamp(8px, 2vw, 14px);
+      min-height: 48px;
+      display: flex;
       align-items: center;
-      padding: 0 2px;
+      justify-content: space-between;
+      gap: clamp(6px, 1.8vw, 10px);
+      padding: 0 4px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .opponent-hand-fan {
-      height: 46px;
-      min-width: 0;
+      height: 44px;
       display: flex;
       align-items: center;
       overflow: visible;
-      padding-left: 3px;
+      padding-left: 2px;
+      flex-shrink: 0;
       isolation: isolate;
     }
     .opponent-hand-card {
-      width: 27px;
-      height: 39px;
-      margin-left: -9px;
-      flex: 0 0 27px;
-      border-radius: 8px;
+      width: 25px;
+      height: 37px;
+      margin-left: -10px;
+      flex: 0 0 25px;
+      border-radius: 7px;
       border: 1.5px solid #f7f6f2;
       box-shadow: 1px 2px 0 #111, 2px 3px 5px rgba(0,0,0,.65);
       display: grid;
@@ -105,49 +106,64 @@
       background-color: #f7f6f2;
       background-image: repeating-linear-gradient(115deg, rgba(0,0,0,.12) 0 1px, transparent 1px 6px);
     }
-    .hud-right { display:flex; align-items:center; justify-content:flex-end; gap:clamp(8px, 1.8vw, 12px); min-width:0; }
+    .hud-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
     .hud-mode-badge {
-      min-height: 42px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:5px;
-      padding: 0 clamp(10px, 2vw, 22px);
-      border-radius: 16px;
-      background:#f7f6f2;
-      color:#111;
-      border:0;
-      box-shadow:none;
-      white-space:nowrap;
-      font: 700 clamp(12px, 3.6vw, 20px)/1 'Roboto Condensed', sans-serif;
-      text-transform:uppercase;
+      height: 40px;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 clamp(8px, 2vw, 14px);
+      border-radius: 9999px;
+      background: #f7f6f2;
+      color: #111;
+      border: 0;
+      box-shadow: none;
+      white-space: nowrap;
+      font: 800 clamp(11px, 3.2vw, 14px)/1 'Roboto Condensed', sans-serif;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      flex: 0 1 auto;
+      margin: 0 2px;
     }
     .hud-trophy {
-      height: 44px;
-      min-width: 82px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 3px 8px;
+      height: 40px;
+      min-width: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 7px;
       border: 2px solid rgba(247,246,242,.95);
-      border-radius: 14px;
-      background:#111;
-      color:#f7f6f2;
+      border-radius: 12px;
+      background: #111;
+      color: #f7f6f2;
       box-shadow: inset 0 0 0 1px rgba(247,246,242,.14);
-      text-align:right;
-      font-family:'Roboto Condensed', sans-serif;
-      text-transform:uppercase;
+      text-align: right;
+      font-family: 'Roboto Condensed', sans-serif;
+      text-transform: uppercase;
+      flex-shrink: 0;
     }
     .hud-help {
-      width:44px;
-      height:44px;
-      flex:0 0 44px;
-      border:2px solid rgba(247,246,242,.95);
-      border-radius:15px;
-      background:#111;
-      color:#f7f6f2;
-      font:700 28px/1 'Roboto Condensed', sans-serif;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+      border: 2px solid rgba(247,246,242,.95);
+      border-radius: 12px;
+      background: #111;
+      color: #f7f6f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 900 18px/1 'Roboto Condensed', sans-serif;
       box-shadow: inset 0 0 0 1px rgba(247,246,242,.14);
+      cursor: pointer;
+      flex-shrink: 0;
     }
     .battle-status-row { min-height: 40px; gap:8px; }
     .battle-turn-badge {
@@ -209,12 +225,12 @@
       text-transform:uppercase;
     }
     @media (max-width: 370px) {
-      .battle-hud { grid-template-columns: minmax(64px, 1fr) auto auto; gap:8px; }
-      .opponent-hand-card { width:25px; flex-basis:25px; height:36px; margin-left:-9px; }
-      .hud-right { gap:8px; }
-      .hud-mode-badge { min-height:38px; padding:0 5px; font-size:9.5px; }
-      .hud-trophy { min-width:60px; height:40px; padding:2px 5px; }
-      .hud-help { width:32px; height:40px; flex-basis:32px; border-radius:12px; }
+      .battle-hud { gap: 4px; padding: 0 2px; }
+      .opponent-hand-card { width:22px; flex-basis:22px; height:34px; margin-left:-10px; }
+      .hud-right { gap: 4px; }
+      .hud-mode-badge { height:36px; min-height:36px; padding:0 6px; font-size:10px; }
+      .hud-trophy { min-width:62px; height:36px; padding:2px 5px; }
+      .hud-help { width:36px; height:36px; flex-basis:36px; border-radius:10px; }
       .battle-status-row { min-height:36px; gap:5px; }
       .battle-turn-badge { padding:4px 7px; font-size:10.5px; }
       .battle-round { font-size:12px; }
@@ -1758,7 +1774,7 @@
       </div>
 
       <!-- Center: Mode Badge -->
-      <div id="tableModeBadge" class="hud-mode-badge"><span>РЕЖИМ: ТАКТИКА</span>
+      <div id="tableModeBadge" class="hud-mode-badge"><span>РЕЖИМ: КЛАССИКА</span>
       </div>
 
       <!-- Right: Opponent Bita and Rules -->
@@ -3594,7 +3610,7 @@
 
       // 1. Update Mode Badge
       const modeBadge = document.getElementById('tableModeBadge');
-      modeBadge.textContent = isTac ? 'РЕЖИМ: ТАКТИКА' : 'РЕЖИМ: КЛАССИКА';
+      modeBadge.textContent = 'РЕЖИМ: КЛАССИКА';
       modeBadge.className = 'hud-mode-badge';
 
       // 2. Trophy counts
