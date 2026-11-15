@@ -1486,6 +1486,10 @@
       flex:0 0 auto;
       width:min(84px, 16vw, 11.1vh) !important;
       height:min(136px, 25.9vw, 18vh) !important;
+      transform: var(--base-transform, none);
+      z-index: var(--base-z, 1);
+      transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.28s ease, z-index 0.01s ease;
+      will-change: transform, box-shadow;
     }
     #playerUnifiedFan {
       min-height:min(136px, 25.9vw, 18vh) !important;
@@ -1518,7 +1522,7 @@
 
     /* Selected Card State for Tactics Mode Hand */
     .card-selected {
-      transform: translateY(-56px) scale(1.48) !important;
+      transform: translateY(-60px) scale(1.48) rotate(0deg) !important;
       z-index: 80 !important;
       opacity:1 !important;
       box-shadow:
@@ -1564,19 +1568,26 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
     }
 
-    /* Flip / Slam Animations */
+    /* Flip / Slam Animations - smooth flight to table */
     @keyframes cardSlamIn {
-      0% { opacity: 0; transform: translateY(45px) scale(1.15) rotate(0deg); }
-      70% { opacity: 1; transform: translateY(-3px) scale(0.98) rotate(var(--land-rot, 0deg)); }
+      0% { opacity: 0.1; transform: translateY(90px) scale(0.92) rotate(-3deg); }
+      65% { opacity: 1; transform: translateY(-5px) scale(1.02) rotate(var(--land-rot, 0deg)); }
       100% { opacity: 1; transform: translateY(0px) scale(1) rotate(var(--land-rot, 0deg)); }
     }
-    .slam-in { animation: cardSlamIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .slam-in {
+      animation: cardSlamIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      will-change: transform, opacity;
+    }
 
     @keyframes aiSlamIn {
-      0% { opacity: 0; transform: translateY(-45px) scale(1.15) rotate(0deg); }
+      0% { opacity: 0.1; transform: translateY(-90px) scale(0.92) rotate(3deg); }
+      65% { opacity: 1; transform: translateY(5px) scale(1.02) rotate(var(--land-rot, 0deg)); }
       100% { opacity: 1; transform: translateY(0px) scale(1) rotate(var(--land-rot, 0deg)); }
     }
-    .ai-slam-in { animation: aiSlamIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .ai-slam-in {
+      animation: aiSlamIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      will-change: transform, opacity;
+    }
 
     /* Property Card Slam Overlay */
     @keyframes propOverlaySlam {
@@ -3827,12 +3838,9 @@
           const isPlayable = (state.phase === 'pick_dino' && card.kind === 'dino') ||
                              (state.phase === 'reaction' && card.kind === 'prop');
 
-          const baseTransform = isSelected
-            ? 'translateY(-56px) scale(1.48) rotate(0deg)'
-            : `rotate(${rot}deg) translateY(${arcDrop.toFixed(1)}px)`;
-
-          const zIdx = isSelected ? 50 : idx + 2;
-          const baseStyle = `transform: ${baseTransform}; z-index: ${zIdx};`;
+          const baseTransform = `rotate(${rot}deg) translateY(${arcDrop.toFixed(1)}px)`;
+          const zIdx = isSelected ? 80 : idx + 2;
+          const baseStyle = `--base-transform: ${baseTransform}; --base-z: ${zIdx};`;
 
           const stateClasses = `hand-fan-card hand-draggable shrink-0 cursor-pointer ${card.kind === 'prop' ? 'hand-fan-property' : ''} ${overlapClass} ${
             isSelected ? 'card-selected' : ''
@@ -3844,7 +3852,7 @@
         }).join('');
 
         bottomControls.innerHTML = `
-          ${actionBannerHtml}
+          <div id="fanActionBanner">${actionBannerHtml}</div>
           <div id="playerUnifiedFan" class="flex items-end justify-center w-full min-h-[114px] sm:min-h-[136px] px-1 overflow-visible relative">
             ${handCardsHtml}
           </div>
@@ -3971,12 +3979,11 @@
               if (state.selectedCardUid === uid) {
                 playCardFromHand(uid);
               } else {
-                state.selectedCardUid = uid;
-                renderTable();
+                updateTacticsHandSelection(uid);
               }
             } else {
-              state.selectedCardUid = (state.selectedCardUid === uid) ? null : uid;
-              renderTable();
+              const nextUid = (state.selectedCardUid === uid) ? null : uid;
+              updateTacticsHandSelection(nextUid);
             }
             return;
           }
@@ -3994,6 +4001,49 @@
         el.ontouchend = onPointerUp;
         el.ontouchcancel = onPointerUp;
       });
+    }
+
+    function updateTacticsHandSelection(newUid) {
+      state.selectedCardUid = newUid;
+      document.querySelectorAll('#playerUnifiedFan .hand-fan-card').forEach(cardEl => {
+        const cUid = cardEl.getAttribute('data-uid');
+        if (cUid === newUid) {
+          cardEl.classList.add('card-selected');
+        } else {
+          cardEl.classList.remove('card-selected');
+        }
+      });
+
+      // Update banner smoothly
+      const banner = document.getElementById('fanActionBanner');
+      if (banner) {
+        const selectedCard = state.playerHand.find(c => c.uid === newUid);
+        if (selectedCard) {
+          if (selectedCard.kind === 'prop') {
+            banner.innerHTML = `
+              <div class="px-3 py-1 rounded-full bg-[#1c1c1b] border-2 border-[#F7F6F2] text-[9.5px] text-[#F7F6F2] font-semibold flex items-center justify-between gap-2 shadow-2xl w-full max-w-md mx-auto mb-1 animate-pulse">
+                <span class="truncate"><b>${selectedCard.name}:</b> ${selectedCard.desc}</span>
+                <button onclick="playCardFromHand('${selectedCard.uid}')"
+                  class="shrink-0 px-2.5 py-0.5 rounded bg-[#F7F6F2] text-[#141414] font-black text-[9px] uppercase tracking-wider">
+                  Сыграть ▲
+                </button>
+              </div>
+            `;
+          } else {
+            banner.innerHTML = `
+              <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/70 font-bold mb-1 pointer-events-none">
+                Нажми повторно или смахни вверх, чтобы выставить
+              </div>
+            `;
+          }
+        } else {
+          banner.innerHTML = `
+            <div class="h-4 flex items-center justify-center text-[8.5px] uppercase tracking-wider text-[#cfcec9]/50 font-bold mb-1 pointer-events-none">
+              ${state.phase === 'pick_dino' ? 'Нажми на карту в руке, чтобы изучить и выставить' : 'Нажми на свойство или жми «В бой»'}
+            </div>
+          `;
+        }
+      }
     }
 
     // -----------------------------------------------------------------------
