@@ -1525,8 +1525,8 @@
       max-width: 100%;
       overflow-x: clip;
       overflow-y: visible;
-      padding-top: 55px; /* Ample space for selected card translateY(-60px) and scale(1.48) */
-      margin-top: -55px; /* Offset parent layout so content position does not shift down */
+      padding-top: 14px;
+      margin-top: 0;
     }
     .hand-scroll-wrapper.has-scroll {
       overflow-x: auto;
@@ -1541,7 +1541,7 @@
     .hand-scroll-wrapper.has-scroll::after {
       content: '';
       position: absolute;
-      top: 55px;
+      top: 14px;
       bottom: 0;
       width: 24px;
       pointer-events: none;
@@ -1563,7 +1563,7 @@
       align-items: flex-end;
       width: 100%;
       box-sizing: border-box;
-      padding-top: 10px;
+      padding-top: 8px;
       padding-bottom: 2px;
       position: relative;
       overflow: visible !important;
@@ -1607,15 +1607,16 @@
       transform: translateY(-6px) scale(1.03) !important;
     }
 
-    /* Selected Card State for Tactics Mode Hand */
+    /* Selected Card State for Tactics Mode Hand: focused, readable, non-intrusive */
     .card-selected {
-      transform: translateY(-60px) scale(1.48) rotate(0deg) !important;
+      transform: translateY(-26px) scale(1.22) rotate(0deg) !important;
+      transform-origin: center bottom !important;
       z-index: 80 !important;
-      opacity:1 !important;
+      opacity: 1 !important;
       box-shadow:
-        0 26px 50px -6px rgba(0, 0, 0, 0.98),
+        0 20px 40px -6px rgba(0, 0, 0, 0.98),
         0 0 0 2.5px #F7F6F2,
-        0 0 32px rgba(255, 255, 255, 0.45) !important;
+        0 0 28px rgba(255, 255, 255, 0.45) !important;
     }
 
     .card-selected .stat-box {
