@@ -1740,17 +1740,23 @@
   <div id="boosterOverlay" class="fixed inset-0 z-40 flex flex-col items-center justify-center p-3 sm:p-4"
        style="padding-top: max(8px, var(--sat)); padding-bottom: max(8px, var(--sab));">
     
-    <!-- Top Header: Shelf & Rules -->
+    <!-- Top Header: Shelf & Rules & Version -->
     <div class="w-full max-w-sm flex items-center justify-between mb-2 px-1 z-10 shrink-0">
       <button onclick="openShelfModal()"
         class="px-4 py-2 min-h-[44px] rounded-full bg-[#1c1c1b] border-2 border-[#F7F6F2] text-[#F7F6F2] text-[15px] font-black uppercase tracking-wider flex items-center gap-2 shadow-lg hover:bg-[#282826] active:scale-95 transition font-['Roboto_Condensed']">
         <span>📚 МОЯ ПОЛОЧКА:</span>
         <span id="shelfBadgeTop" class="bg-[#F7F6F2] text-[#141414] px-2 py-0.5 rounded-md text-[15px] font-black leading-none">0</span>
       </button>
-      <button onclick="toggleRulesModal(true)" title="Правила игры"
-        class="hud-help !w-9 !h-9 text-lg active:scale-90 transition">
-        ?
-      </button>
+      <div class="flex items-center gap-1.5">
+        <button onclick="openVersionModal()" title="Выбор версии игры"
+          class="px-2.5 py-1.5 min-h-[36px] rounded-xl bg-[#1c1c1b] border border-[#F7F6F2]/40 text-[#cfcec9] text-[11px] font-bold uppercase tracking-wider hover:bg-[#282826] active:scale-95 transition">
+          v2.0 ▾
+        </button>
+        <button onclick="toggleRulesModal(true)" title="Правила игры"
+          class="hud-help !w-9 !h-9 text-lg active:scale-90 transition">
+          ?
+        </button>
+      </div>
     </div>
 
     <div id="boosterPack" onclick="openBooster(1)"
@@ -1906,6 +1912,10 @@
             <button onclick="handleMenuAction('toggle_bg')" class="hud-menu-item">
               <span>🎨</span>
               <span id="toggleBgText">Сменить фон стола</span>
+            </button>
+            <button onclick="handleMenuAction('version_switch')" class="hud-menu-item border-t border-[#F7F6F2]/15 pt-1.5">
+              <span>🔄</span>
+              <span>Сменить версию игры</span>
             </button>
           </div>
         </div>
@@ -2147,6 +2157,56 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VERSION SELECTOR MODAL                                                -->
+  <!-- ===================================================================== -->
+  <div id="versionModal" style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,0.88); backdrop-filter:blur(6px);">
+    <div style="width:100%; max-width:340px; margin:auto;"
+      class="bg-[#161615] border-2 border-[#F7F6F2] rounded-2xl p-4 flex flex-col text-[#F7F6F2] shadow-2xl">
+      <div class="text-center pb-2.5 mb-3 border-b border-[#F7F6F2]/30">
+        <div class="text-[9px] uppercase tracking-[0.25em] text-[#cfcec9] font-black">ПАЛЕО-ДУЭЛЬ</div>
+        <h2 class="font-title text-base sm:text-lg font-black tracking-wider uppercase mt-0.5">ВЫБЕРИТЕ ВЕРСИЮ ИГРЫ</h2>
+      </div>
+
+      <div class="space-y-2.5 mb-3">
+        <!-- New Version (Recommended) -->
+        <div onclick="chooseGameVersion('new')"
+          class="p-3 rounded-xl bg-[#222220] hover:bg-[#2c2c28] border-2 border-[#F7F6F2] cursor-pointer active:scale-[0.98] transition">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-black text-sm text-[#F7F6F2]">🦖 Новая версия (v2.0)</span>
+            <span class="text-[8px] font-black uppercase bg-[#F7F6F2] text-[#141414] px-1.5 py-0.5 rounded">Тест</span>
+          </div>
+          <p class="text-[11px] text-[#cfcec9] leading-snug">
+            Коллекция «Полочка», тактика 6–12 карт с каруселью, смена фона стола, новые анимации.
+          </p>
+          <div class="mt-2 text-[10.5px] font-black text-right text-[#F7F6F2]">
+            Играть в новую версию →
+          </div>
+        </div>
+
+        <!-- Old Version (GitHub) -->
+        <div onclick="chooseGameVersion('old')"
+          class="p-3 rounded-xl bg-[#1a1a19] hover:bg-[#242422] border border-[#F7F6F2]/40 cursor-pointer active:scale-[0.98] transition">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-black text-sm text-[#cfcec9]">🎴 Старая версия (v1.0)</span>
+            <span class="text-[8px] font-black uppercase bg-[#333330] text-[#cfcec9] px-1.5 py-0.5 rounded">GitHub</span>
+          </div>
+          <p class="text-[11px] text-[#9c9b96] leading-snug">
+            Оригинальная стабильная сборка из репозитория GitHub.
+          </p>
+          <div class="mt-2 text-[10.5px] font-bold text-right text-[#cfcec9]">
+            Перейти в старую версию →
+          </div>
+        </div>
+      </div>
+
+      <button onclick="chooseGameVersion('new')"
+        class="w-full py-2.5 rounded-xl bg-[#F7F6F2] text-[#141414] font-black text-xs uppercase tracking-wider shadow hover:bg-white active:scale-95 transition">
+        ЗАПУСТИТЬ НОВУЮ ВЕРСИЮ (v2.0)
+      </button>
     </div>
   </div>
 
@@ -2417,6 +2477,25 @@
 
     let arenaTheme = localStorage.getItem('paleo_arena_theme') || 'art'; // 'art' | 'black'
 
+    function openVersionModal() {
+      const modal = document.getElementById('versionModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeVersionModal() {
+      const modal = document.getElementById('versionModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function chooseGameVersion(ver) {
+      if (ver === 'old') {
+        window.location.href = 'v1.html';
+      } else {
+        closeVersionModal();
+        sessionStorage.setItem('paleo_version_selected', 'new');
+      }
+    }
+
     function toggleRulesModal(show) {
       document.getElementById('rulesModal').classList.toggle('hidden', !show);
     }
@@ -2458,6 +2537,8 @@
         arenaTheme = (arenaTheme === 'black') ? 'art' : 'black';
         localStorage.setItem('paleo_arena_theme', arenaTheme);
         applyArenaTheme();
+      } else if (action === 'version_switch') {
+        openVersionModal();
       }
     }
 
@@ -4518,6 +4599,11 @@
 
     // Initialize shelf badges on load
     updateShelfCountBadges();
+
+    // Auto-dismiss version modal if already chosen in current session
+    if (sessionStorage.getItem('paleo_version_selected') === 'new') {
+      closeVersionModal();
+    }
   </script>
 </body>
 </html>
