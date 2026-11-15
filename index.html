@@ -9,7 +9,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="typography.css">
+  <script>
+    try {
+      if (localStorage.getItem('paleo_version_selected') === 'new') {
+        document.documentElement.classList.add('hide-version-modal');
+      }
+    } catch(e) {}
+  </script>
   <style>
+    html.hide-version-modal #versionModal {
+      display: none !important;
+    }
     :root {
       --sat: env(safe-area-inset-top, 0px);
       --sab: env(safe-area-inset-bottom, 0px);
@@ -2163,7 +2173,28 @@
   <!-- ===================================================================== -->
   <!-- VERSION SELECTOR MODAL                                                -->
   <!-- ===================================================================== -->
-  <div id="versionModal" style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,0.88); backdrop-filter:blur(6px);">
+  <script>
+    function openVersionModal() {
+      document.documentElement.classList.remove('hide-version-modal');
+      const modal = document.getElementById('versionModal');
+      if (modal) modal.style.display = 'flex';
+    }
+    function closeVersionModal() {
+      const modal = document.getElementById('versionModal');
+      if (modal) modal.style.display = 'none';
+    }
+    function chooseGameVersion(ver) {
+      if (ver === 'old') {
+        window.location.href = 'v1.html';
+      } else {
+        closeVersionModal();
+        try {
+          localStorage.setItem('paleo_version_selected', 'new');
+        } catch(e) {}
+      }
+    }
+  </script>
+  <div id="versionModal" style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(10,10,10,0.94); touch-action:manipulation;">
     <div style="width:100%; max-width:340px; margin:auto;"
       class="bg-[#161615] border-2 border-[#F7F6F2] rounded-2xl p-4 flex flex-col text-[#F7F6F2] shadow-2xl">
       <div class="text-center pb-2.5 mb-3 border-b border-[#F7F6F2]/30">
@@ -2174,7 +2205,7 @@
       <div class="space-y-2.5 mb-3">
         <!-- New Version (Recommended) -->
         <div onclick="chooseGameVersion('new')"
-          class="p-3 rounded-xl bg-[#222220] hover:bg-[#2c2c28] border-2 border-[#F7F6F2] cursor-pointer active:scale-[0.98] transition">
+          class="p-3 rounded-xl bg-[#222220] hover:bg-[#2c2c28] border-2 border-[#F7F6F2] cursor-pointer active:scale-[0.98] transition select-none">
           <div class="flex items-center justify-between mb-1">
             <span class="font-black text-sm text-[#F7F6F2]">🦖 Новая версия (v2.0)</span>
             <span class="text-[8px] font-black uppercase bg-[#F7F6F2] text-[#141414] px-1.5 py-0.5 rounded">Тест</span>
@@ -2189,7 +2220,7 @@
 
         <!-- Old Version (GitHub) -->
         <div onclick="chooseGameVersion('old')"
-          class="p-3 rounded-xl bg-[#1a1a19] hover:bg-[#242422] border border-[#F7F6F2]/40 cursor-pointer active:scale-[0.98] transition">
+          class="p-3 rounded-xl bg-[#1a1a19] hover:bg-[#242422] border border-[#F7F6F2]/40 cursor-pointer active:scale-[0.98] transition select-none">
           <div class="flex items-center justify-between mb-1">
             <span class="font-black text-sm text-[#cfcec9]">🎴 Старая версия (v1.0)</span>
             <span class="text-[8px] font-black uppercase bg-[#333330] text-[#cfcec9] px-1.5 py-0.5 rounded">GitHub</span>
@@ -2203,8 +2234,8 @@
         </div>
       </div>
 
-      <button onclick="chooseGameVersion('new')"
-        class="w-full py-2.5 rounded-xl bg-[#F7F6F2] text-[#141414] font-black text-xs uppercase tracking-wider shadow hover:bg-white active:scale-95 transition">
+      <button type="button" onclick="chooseGameVersion('new')"
+        class="w-full py-3 rounded-xl bg-[#F7F6F2] text-[#141414] font-black text-xs uppercase tracking-wider shadow hover:bg-white active:scale-95 transition cursor-pointer select-none">
         ЗАПУСТИТЬ НОВУЮ ВЕРСИЮ (v2.0)
       </button>
     </div>
@@ -2476,25 +2507,6 @@
     const randAngle = () => (Math.random() * 4 - 2).toFixed(1) + 'deg';
 
     let arenaTheme = localStorage.getItem('paleo_arena_theme') || 'art'; // 'art' | 'black'
-
-    function openVersionModal() {
-      const modal = document.getElementById('versionModal');
-      if (modal) modal.classList.remove('hidden');
-    }
-
-    function closeVersionModal() {
-      const modal = document.getElementById('versionModal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function chooseGameVersion(ver) {
-      if (ver === 'old') {
-        window.location.href = 'v1.html';
-      } else {
-        closeVersionModal();
-        sessionStorage.setItem('paleo_version_selected', 'new');
-      }
-    }
 
     function toggleRulesModal(show) {
       document.getElementById('rulesModal').classList.toggle('hidden', !show);
@@ -4545,65 +4557,15 @@
       document.getElementById('endOverlay').classList.remove('hidden');
     }
 
-    (() => {
-      const selectors = '.fit-single-line, .dino-name-text, .dino-latin-name, .dino-card-combat-statistics .stat-label, .dino-card-combat-statistics .stat-value, .reveal-prop-name, .reveal-prop-desc, .reveal-prop-action, .combat-result-versus, .combat-result-detail, .combat-result-badge, .combat-result-collision';
-      let frame = 0;
-      let forceNextFit = false;
-      const observedText = new WeakSet();
-      const sizeObserver = new ResizeObserver(() => scheduleFit());
-      const fitAllText = () => {
-        document.querySelectorAll(selectors).forEach(el => {
-          if (!observedText.has(el)) {
-            observedText.add(el);
-            sizeObserver.observe(el);
-          }
-          if (!el.textContent.trim()) return;
-          const selectedState = el.closest('.card-selected') ? 'selected' : 'normal';
-          const signature = `${el.clientWidth}|${el.textContent}|${selectedState}`;
-          if (!forceNextFit && el.dataset.fitSignature === signature) return;
-          if (getComputedStyle(el).display === 'none') return;
-
-          // Clear the last fitted size before reading CSS again. This lets clamp()/media
-          // queries supply a fresh natural size after a resize or device rotation.
-          el.style.removeProperty('font-size');
-          const style = getComputedStyle(el);
-          const baseSize = parseFloat(style.fontSize);
-          if (!Number.isFinite(baseSize) || !baseSize) return;
-          const minSize = Math.min(baseSize, 4);
-          el.style.setProperty('white-space', 'nowrap', 'important');
-          el.style.setProperty('max-width', '100%', 'important');
-          let size = baseSize;
-          el.style.setProperty('font-size', `${size}px`, 'important');
-          while (el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1 && size > minSize) {
-            size = Math.max(minSize, size - 0.25);
-            el.style.setProperty('font-size', `${size}px`, 'important');
-          }
-          if (size >= baseSize) el.style.removeProperty('font-size');
-          el.dataset.fitSignature = `${el.clientWidth}|${el.textContent}|${selectedState}`;
-        });
-        forceNextFit = false;
-      };
-      const scheduleFit = (force = false) => {
-        forceNextFit ||= force;
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(fitAllText);
-      };
-      const textObserver = new MutationObserver(scheduleFit);
-      textObserver.observe(document.body, { childList:true, characterData:true, attributes:true, attributeFilter:['class'], subtree:true });
-      window.addEventListener('resize', scheduleFit, { passive:true });
-      window.addEventListener('orientationchange', () => scheduleFit(true), { passive:true });
-      window.visualViewport?.addEventListener('resize', () => scheduleFit(true), { passive:true });
-      if (document.fonts?.ready) document.fonts.ready.then(() => scheduleFit(true));
-      scheduleFit(true);
-    })();
-
     // Initialize shelf badges on load
     updateShelfCountBadges();
 
-    // Auto-dismiss version modal if already chosen in current session
-    if (sessionStorage.getItem('paleo_version_selected') === 'new') {
-      closeVersionModal();
-    }
+    // Auto-dismiss version modal if already chosen on this device
+    try {
+      if (localStorage.getItem('paleo_version_selected') === 'new') {
+        closeVersionModal();
+      }
+    } catch(e) {}
   </script>
 </body>
 </html>
